@@ -33,7 +33,7 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Car Management App</h1>
+      <h1>Vehicle Shipping Management App</h1>
       <h2>Vehicle List</h2>
       {error && <p style={{ color: 'red'}}>{error}</p>}
       <ul>
