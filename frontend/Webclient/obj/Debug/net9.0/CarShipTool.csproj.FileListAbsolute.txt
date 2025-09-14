@@ -1,0 +1,5 @@
+C:\Users\sadat\OneDrive\Desktop\NonOD\Projects\AutoShip\AutoShip\WebClient\WebClient\obj\Debug\net9.0\CarShipTool.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\sadat\OneDrive\Desktop\NonOD\Projects\AutoShip\AutoShip\WebClient\WebClient\obj\Debug\net9.0\CarShipTool.csproj.CoreCompileInputs.cache
+C:\Users\sadat\OneDrive\Desktop\NonOD\Projects\AutoShip\AutoShip\WebClient\WebClient\obj\Debug\net9.0\CarShipTool.sourcelink.json
+C:\Users\sadat\OneDrive\Desktop\NonOD\Projects\AutoShip\AutoShip\WebClient\WebClient\obj\Debug\net9.0\rpswa.dswa.cache.json
+C:\Users\sadat\OneDrive\Desktop\NonOD\Projects\AutoShip\AutoShip\WebClient\WebClient\obj\Debug\net9.0\CarShipTool.MvcApplicationPartsAssemblyInfo.cache

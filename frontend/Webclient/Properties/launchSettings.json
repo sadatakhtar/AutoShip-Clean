@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "CarShipping": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51098;http://localhost:51099"
+    }
+  }
+}
