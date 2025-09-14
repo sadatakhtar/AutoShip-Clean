@@ -21,7 +21,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd frontend.Webclient
+          cd frontend/Webclient
           npm install
 
       - name: Run tests and generate coverage
