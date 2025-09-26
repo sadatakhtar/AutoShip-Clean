@@ -5,23 +5,24 @@ import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
 
 
-describe('App routing', () => {
-  test('renders Home page on default route', () => {
+describe('Route validity', () => {
+  it('should render Home component at "/"', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Home/i)).toBeInTheDocument();
+    expect(screen.getByTestId('home-component')).toBeInTheDocument();
   });
 
-  test('renders About page on /about route', () => {
+  it('should render About component at "/about"', () => {
     render(
       <MemoryRouter initialEntries={['/about']}>
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/About/i)).toBeInTheDocument();
+    expect(screen.getByTestId('about-component')).toBeInTheDocument();
   });
 });
+
 

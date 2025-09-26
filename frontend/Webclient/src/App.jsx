@@ -3,20 +3,36 @@ import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import axios from 'axios';
-import { Route, Routes } from 'react-router-dom'; 
 import './App.css'
+import { Routes, Route, Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import Home from './pages/Home';
 import About from './pages/About';
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
+    <>
+      <AppBar position="fixed">
+        <Toolbar>
+          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+            AutoShip
+          </Typography>
+          <Button color="inherit" component={Link} to="/">Home</Button>
+          <Button color="inherit" component={Link} to="/about">About</Button>
+        </Toolbar>
+      </AppBar>
 
-    </Routes>
-  )
+      <Container sx={{ mt: 4 }}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Container>
+    </>
+  );
 }
+
+
   // const [count, setCount] = useState(0)
 
   //  const [cars, setCars] = useState([]);
