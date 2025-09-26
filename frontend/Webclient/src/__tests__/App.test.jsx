@@ -1,14 +1,27 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+
 import App from '../App';
 
-describe('App Component', () => {
-  test('renders title without error', () => {
-    render(<App />);
-    expect(screen.getByText(/Vehicle Shipping Management App/i)).toBeInTheDocument();
+
+describe('App routing', () => {
+  test('renders Home page on default route', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/Home/i)).toBeInTheDocument();
   });
-  test('renders subtitle', () => {
-    render(<App />);
-    expect(screen.getByText(/Vehicle list/i)).toBeInTheDocument();
-  })
+
+  test('renders About page on /about route', () => {
+    render(
+      <MemoryRouter initialEntries={['/about']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/About/i)).toBeInTheDocument();
+  });
 });
+
