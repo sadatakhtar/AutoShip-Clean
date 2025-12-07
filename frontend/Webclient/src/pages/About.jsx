@@ -4,7 +4,7 @@ import React from 'react'
 const About = () => {
   return (
     <div data-testid="about-component">
-    <Typography variant="h4">About Us</Typography>;
+    <Typography variant="h4">About Us</Typography>
 
 </div>
   )
