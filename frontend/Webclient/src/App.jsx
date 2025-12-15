@@ -8,16 +8,18 @@ import { Routes, Route, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button, Container } from '@mui/material';
 import Home from './pages/Home';
 import About from './pages/About';
+import DashboardPage from './pages/DashboardPage';
 
 function App() {
   return (
     <>
       <AppBar position="fixed">
         <Toolbar>
-          <Typography variant="h4" sx={{ flexGrow: 1 }}>
+          <Typography variant="h4" sx={{ flexGrow:1, paddingLeft: "170px" }}>
             AutoShip
           </Typography>
           <Button color="inherit" component={Link} to="/">Home</Button>
+          <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
           <Button color="inherit" component={Link} to="/about">About</Button>
         </Toolbar>
       </AppBar>
@@ -26,6 +28,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
         </Routes>
       </Container>
     </>

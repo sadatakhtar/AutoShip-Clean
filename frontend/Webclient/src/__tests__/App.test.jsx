@@ -23,6 +23,15 @@ describe('Route validity', () => {
     );
     expect(screen.getByTestId('about-component')).toBeInTheDocument();
   });
+
+  it('Should render dashboard component at "/dashboard"', () => {
+        render(
+      <MemoryRouter initialEntries={['/dashboard']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByTestId('dashboard-component')).toBeInTheDocument();
+  })
 });
 
 

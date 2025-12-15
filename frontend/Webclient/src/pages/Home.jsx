@@ -6,6 +6,7 @@ const Home = () => {
   return (
     <div data-testid="home-component">
         <Typography variant="h4">Welcome to the Home Page</Typography>
+        <p>Under construction</p>
 
     </div>
 
