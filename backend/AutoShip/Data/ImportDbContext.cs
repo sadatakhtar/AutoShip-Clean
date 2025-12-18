@@ -13,6 +13,8 @@ namespace AutoShip.Data
         public DbSet<CustomsClearance> Clearances { get; set; }
         public DbSet<RegistrationProcess> Registrations { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<User> Users { get; set; }
+
         // public object Invoices { get; internal set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

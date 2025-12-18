@@ -19,7 +19,7 @@ namespace AutoShip.Controllers
         }
 
         // Add methods for CRUD operations here
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<ActionResult<Car>> GetAllCars()
         {
@@ -54,7 +54,7 @@ namespace AutoShip.Controllers
             return Ok(car.Id);
 
         }
-
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<Car>> UpdateCar(int id, Car updatedCar)
         {

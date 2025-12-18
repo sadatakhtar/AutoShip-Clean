@@ -7,6 +7,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
+using BCrypt.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,6 +72,27 @@ builder.Services.AddAuthorization();
 
 
 var app = builder.Build();
+
+// Seed initial admin user if none exists
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ImportDbContext>();
+
+    if (!context.Users.Any())
+    {
+        var admin = new AutoShip.Models.User
+        {
+            Username = "admin",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
+            Role = "Admin"
+        };
+
+        context.Users.Add(admin);
+        context.SaveChanges();
+    }
+}
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

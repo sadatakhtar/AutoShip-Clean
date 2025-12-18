@@ -10,6 +10,9 @@ namespace AutoShip.DTOs
         public DateTime ManufactureDate { get; set; }
         public CarStatus Status { get; set; }
         public List<DocumentDto>? Documents { get; set; }
+        public string? IVAStatus { get; set; }
+        public string? MOTStatus { get; set; }
+        public string? V55Status { get; set; }
 
 
     }
