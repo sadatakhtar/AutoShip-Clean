@@ -8,23 +8,30 @@ import {
   TableRow,
   Paper,
   CircularProgress,
+  Box,
+  Typography,
+  IconButton,
 } from '@mui/material';
+import EditAndDelBtns from './buttons/EditAndDelBtns';
+import AddIcon from '@mui/icons-material/Add';
+import { getVehicleStatus } from '../utils/carTableHelpers';
 
 const CarTable = ({ data, isLoading }) => {
   const [error, setError] = useState(null);
 
-  const getVehicleStatus = (status) => {
-    if (status === 1) return 'Awaiting documents';
-    if (status === 2) return 'Documents recieved';
-    if (status === 3) return 'Awaiting customs';
-    if (status === 4) return 'Customs cleared';
-    if (status === 5) return 'IVA completed';
-    if (status === 6) return 'MOT completed';
-    if (status === 7) return 'Approved';
-  };
-
   console.log('DDDD', data);
+
   return (
+       <Box>
+      {/* Header with Add button */}
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="h6">Add Vehicle</Typography>
+        <IconButton color="primary" aria-label="add car">
+          <AddIcon />
+        </IconButton>
+      </Box>
+
+
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -60,7 +67,7 @@ const CarTable = ({ data, isLoading }) => {
                 <TableCell>{vehicle?.ivaStatus}</TableCell>
                 <TableCell>{vehicle?.motStatus}</TableCell>
                 <TableCell>{getVehicleStatus(vehicle?.status)}</TableCell>
-                <TableCell>{<button>Edit</button>}</TableCell>
+                <TableCell>{<EditAndDelBtns />}</TableCell>
               </TableRow>
             ))
           ) : (
@@ -73,6 +80,7 @@ const CarTable = ({ data, isLoading }) => {
         </TableBody>
       </Table>
     </TableContainer>
+    </Box>
   );
 };
 
