@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 import CarTable from '../../src/components/CarTable';
-import axios from 'axios';
+import api from '../api/axios';
 
 const DashboardPage = () => {
   const [cars, setCars] = useState([]);
@@ -10,10 +10,10 @@ const DashboardPage = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get('http://localhost:5065/api/car')
+    api
+      .get('/car')
       .then((response) => {
-        setCars(response.data.$values);
+        setCars(response?.data?.$values || response?.data);
       })
       .catch((error) => {
         console.error('Error fetching car data: ', error);
