@@ -24,7 +24,8 @@ namespace AutoShip.Controllers
         public async Task<ActionResult<Car>> GetAllCars()
         {
             var cars = await _context.Cars.ToListAsync();
-            return Ok(cars);
+            var dtos = cars.Adapt<List<CarDto>>();
+            return Ok(dtos);
 
         }
 
@@ -66,6 +67,9 @@ namespace AutoShip.Controllers
             car.Model = updatedCar.Model;
             car.Status = updatedCar.Status;
             car.Documents = updatedCar.Documents;
+            car.MOTStatus = updatedCar.MOTStatus;
+            car.V55Status = updatedCar.V55Status;
+            car.IVAStatus = updatedCar.IVAStatus;
 
             _context.Cars.Update(car);
             await _context.SaveChangesAsync();

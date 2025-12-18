@@ -9,6 +9,9 @@ namespace AutoShip.DTOs
         public string Make { get; set; }
         public string Model { get; set; }
         public CarStatus Status { get; set; }
+        public string IVAStatus { get; set; }
+        public string MOTStatus { get; set; }
+        public string V55Status { get; set; }
 
         public List<DocumentDto> Documents { get; set; }
 

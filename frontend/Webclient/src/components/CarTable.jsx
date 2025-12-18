@@ -1,28 +1,29 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, CircularProgress
-} from "@mui/material";
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  CircularProgress,
+} from '@mui/material';
 
-const CarTable = () => {
-  const [cars, setCars] = useState([]);
-  const [loading, setLoading] = useState(true);
+const CarTable = ({ data, isLoading }) => {
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5065/api/car")
-      .then((response) => {
-        setCars(response.data.$values || response.data);
-      })
-      .catch((err) => {
-        console.error("Error fetching car data: ", err);
-        setError("Failed to fetch car data");
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const getVehicleStatus = (status) => {
+    if (status === 1) return 'Awaiting documents';
+    if (status === 2) return 'Documents recieved';
+    if (status === 3) return 'Awaiting customs';
+    if (status === 4) return 'Customs cleared';
+    if (status === 5) return 'IVA completed';
+    if (status === 6) return 'MOT completed';
+    if (status === 7) return 'Approved';
+  };
 
+  console.log('DDDD', data);
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -33,11 +34,12 @@ const CarTable = () => {
             <TableCell>Model</TableCell>
             <TableCell>IVA Application</TableCell>
             <TableCell>MOT</TableCell>
-            <TableCell>Registration Status</TableCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {loading ? (
+          {isLoading ? (
             <TableRow>
               <TableCell colSpan={6} align="center">
                 <CircularProgress />
@@ -45,19 +47,20 @@ const CarTable = () => {
             </TableRow>
           ) : error ? (
             <TableRow>
-              <TableCell colSpan={6} align="center" style={{ color: "red" }}>
+              <TableCell colSpan={6} align="center" style={{ color: 'red' }}>
                 {error}
               </TableCell>
             </TableRow>
-          ) : cars.length > 0 ? (
-            cars.map((car) => (
-              <TableRow key={car.id}>
-                <TableCell>{car.id}</TableCell>
-                <TableCell>{car.make}</TableCell>
-                <TableCell>{car.model}</TableCell>
-                <TableCell>{car.ivaApplication}</TableCell>
-                <TableCell>{car.mot}</TableCell>
-                <TableCell>{car.registrationStatus}</TableCell>
+          ) : data?.length > 0 ? (
+            data?.map((vehicle) => (
+              <TableRow key={vehicle?.id}>
+                <TableCell>{vehicle?.id}</TableCell>
+                <TableCell>{vehicle?.make}</TableCell>
+                <TableCell>{vehicle?.model}</TableCell>
+                <TableCell>{vehicle?.ivaStatus}</TableCell>
+                <TableCell>{vehicle?.motStatus}</TableCell>
+                <TableCell>{getVehicleStatus(vehicle?.status)}</TableCell>
+                <TableCell>{<button>Edit</button>}</TableCell>
               </TableRow>
             ))
           ) : (
@@ -74,4 +77,3 @@ const CarTable = () => {
 };
 
 export default CarTable;
-

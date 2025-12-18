@@ -23,6 +23,9 @@ namespace AutoShip.Models
         public string? Model { get; set; }
         public DateTime ManufactureDate { get; set; }
         public CarStatus Status { get; set; }
+        public string? IVAStatus { get; set; }
+        public string? MOTStatus { get; set; }
+        public string? V55Status { get; set; }
 
         public ICollection<Documents> Documents { get; set; } = new List<Documents>();
         public CustomsClearance? Clearance { get; set; }

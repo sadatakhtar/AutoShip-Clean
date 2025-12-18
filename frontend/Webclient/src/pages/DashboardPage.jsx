@@ -6,6 +6,7 @@ import axios from 'axios';
 const DashboardPage = () => {
   const [cars, setCars] = useState([]);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     axios
@@ -16,7 +17,7 @@ const DashboardPage = () => {
       .catch((error) => {
         console.error('Error fetching car data: ', error);
         setError('Failed to fetch car data');
-      });
+      }).finally(() => setIsLoading(false))
   }, []);
 
   return (
@@ -24,7 +25,7 @@ const DashboardPage = () => {
       <Typography variant="h5" mb={2}>
         Dashboard
       </Typography>
-      <CarTable data={cars} />
+      <CarTable data={cars} loading={isLoading} />
     </div>
   );
 };
