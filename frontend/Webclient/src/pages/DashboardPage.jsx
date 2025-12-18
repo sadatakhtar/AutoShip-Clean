@@ -9,6 +9,7 @@ const DashboardPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get('http://localhost:5065/api/car')
       .then((response) => {
@@ -16,8 +17,9 @@ const DashboardPage = () => {
       })
       .catch((error) => {
         console.error('Error fetching car data: ', error);
-        setError('Failed to fetch car data');
-      }).finally(() => setIsLoading(false))
+        setError('Error fetching Data...');
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   return (
@@ -25,7 +27,7 @@ const DashboardPage = () => {
       <Typography variant="h5" mb={2}>
         Dashboard
       </Typography>
-      <CarTable data={cars} loading={isLoading} />
+      <CarTable data={cars} loading={isLoading} error={error} />
     </div>
   );
 };
