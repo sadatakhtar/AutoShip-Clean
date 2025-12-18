@@ -6,9 +6,9 @@ import App from '../App';
 
 
 describe('Route validity', () => {
-  it('should render Home component at "/"', () => {
+  it('should render Home component at "/home"', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
+      <MemoryRouter initialEntries={['/home']}>
         <App />
       </MemoryRouter>
     );
