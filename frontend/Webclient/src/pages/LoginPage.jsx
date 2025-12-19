@@ -51,6 +51,7 @@ const LoginPage = ({ onLogin }) => {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
+            variant="standard"
             label="Username"
             fullWidth
             margin="normal"
@@ -58,6 +59,7 @@ const LoginPage = ({ onLogin }) => {
             onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
+            variant="standard"
             label="Password"
             type="password"
             fullWidth
