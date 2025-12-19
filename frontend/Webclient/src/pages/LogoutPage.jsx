@@ -12,9 +12,6 @@ const LogoutPage = () => {
     }, 2000);
   }, [navigate]);
 
-  //   setTimeout(() => {
-  //     navigate('/');
-  //   }, 3000);
   return (
     <div
       style={{

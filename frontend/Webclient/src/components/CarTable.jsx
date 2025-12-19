@@ -18,11 +18,7 @@ import { getVehicleStatus } from '../utils/carTableHelpers';
 import AddCarModal from './modals/AddCarModal';
 import Loading from './Loading';
 
-const CarTable = ({ data, isLoading, error }) => {
-  const [open, setOpen] = useState(false);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+const CarTable = ({ data, isLoading, error, open, handleClose }) => {
 
   console.log('DDDD', data);
 
@@ -43,19 +39,7 @@ const CarTable = ({ data, isLoading, error }) => {
 
   return (
     <Box>
-      {/* Header with Add button */}
-      <Box
-        display="flex"
-        justifyContent="space-between"
-        alignItems="center"
-        mb={2}
-      >
-        <Typography variant="h6">Add Vehicle</Typography>
-        <IconButton color="primary" aria-label="add car" onClick={handleOpen}>
-          <AddIcon />
-        </IconButton>
-      </Box>
-
+     
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -84,7 +68,15 @@ const CarTable = ({ data, isLoading, error }) => {
               </TableRow>
             ) : data?.length > 0 ? (
               data?.map((vehicle) => (
-                <TableRow key={vehicle?.id}>
+                <TableRow
+                  key={vehicle?.id}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: '#d8ddecff', // light blue hover
+                      cursor: 'pointer',
+                    },
+                  }}
+                >
                   <TableCell>{vehicle?.id}</TableCell>
                   <TableCell>{vehicle?.make}</TableCell>
                   <TableCell>{vehicle?.model}</TableCell>

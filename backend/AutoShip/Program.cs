@@ -1,13 +1,15 @@
 using AutoShip.Configuration;
 using AutoShip.Data;
+using AutoShip.Models;
+using BCrypt.Net;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
-using BCrypt.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,13 +80,15 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ImportDbContext>();
 
-    if (!context.Users.Any())
+    if (!context.Users.Any(u => u.Username == "admin"))
     {
-        var admin = new AutoShip.Models.User
+        var hasher = new PasswordHasher<User>();
+
+        var admin = new User
         {
             Username = "admin",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("password"),
-            Role = "Admin"
+            Role = "Admin",
+            PasswordHash = hasher.HashPassword(null, "password")
         };
 
         context.Users.Add(admin);
