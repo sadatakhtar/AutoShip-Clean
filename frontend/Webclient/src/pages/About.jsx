@@ -1,13 +1,13 @@
-import { Typography } from '@mui/material'
-import React from 'react'
+import React from 'react';
+import { Typography } from '@mui/material';
 
 const About = () => {
   return (
-    <div data-testid="about-component">
-    <Typography variant="h4">About Us</Typography>
+    <div data-testid="about-component" style={{ marginTop: 100 }}>
+      <Typography variant="h4">About Us</Typography>
+      <p>Under construction</p>
+    </div>
+  );
+};
 
-</div>
-  )
-}
-
-export default About
+export default About;

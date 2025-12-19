@@ -11,11 +11,6 @@ import {
   Box,
   Typography,
   IconButton,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
 } from '@mui/material';
 import EditAndDelBtns from './buttons/EditAndDelBtns';
 import AddIcon from '@mui/icons-material/Add';
@@ -64,14 +59,14 @@ const CarTable = ({ data, isLoading, error }) => {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
-              <TableCell>ID</TableCell>
-              <TableCell>Make</TableCell>
-              <TableCell>Model</TableCell>
-              <TableCell>IVA Application</TableCell>
-              <TableCell>MOT</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Action</TableCell>
+            <TableRow style={{ backgroundColor: '#acb7c2ff' }}>
+              <TableCell style={{ fontSize: 20 }}>Id</TableCell>
+              <TableCell style={{ fontSize: 20 }}>Make</TableCell>
+              <TableCell style={{ fontSize: 20 }}>Model</TableCell>
+              <TableCell style={{ fontSize: 20 }}>IVA Application</TableCell>
+              <TableCell style={{ fontSize: 20 }}>MOT</TableCell>
+              <TableCell style={{ fontSize: 20 }}>Status</TableCell>
+              <TableCell style={{ fontSize: 20 }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

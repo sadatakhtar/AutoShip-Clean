@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
 import CarTable from '../../src/components/CarTable';
 import api from '../api/axios';
 
@@ -23,10 +22,7 @@ const DashboardPage = () => {
   }, []);
 
   return (
-    <div data-testid="dashboard-component">
-      <Typography variant="h5" mb={2}>
-        Dashboard
-      </Typography>
+    <div data-testid="dashboard-component" style={{ marginTop: 100}}>
       <CarTable data={cars} loading={isLoading} error={error} />
     </div>
   );

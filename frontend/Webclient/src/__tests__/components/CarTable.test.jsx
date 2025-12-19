@@ -37,7 +37,7 @@ describe("CarTable Component", () => {
     render(<CarTable data={mockData} isLoading={false} error={null} />);
 
     // Check table headers
-    expect(screen.getByText("ID")).toBeInTheDocument();
+    expect(screen.getByText("Id")).toBeInTheDocument();
     expect(screen.getByText("Make")).toBeInTheDocument();
     expect(screen.getByText("Model")).toBeInTheDocument();
     expect(screen.getByText("IVA Application")).toBeInTheDocument();
