@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import DashboardPage from "../../../pages/DashboardPage";
 import api from "../../../api/axios";
+import { AuthProvider } from "../../../context/AuthContext";
 
-
+// ✅ Mock axios
 jest.mock("../../../api/axios", () => ({
   get: jest.fn(),
   post: jest.fn(),
@@ -13,32 +15,51 @@ jest.mock("../../../api/axios", () => ({
   }
 }));
 
-
-
 let consoleErrorSpy;
 
 beforeEach(() => {
-  // Default axios mock response
+  // ✅ Mock a valid JWT token so AuthContext works
+  localStorage.setItem(
+    "jwtToken",
+    "header." +
+      btoa(
+        JSON.stringify({
+          "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name":
+            "testuser",
+          "http://schemas.microsoft.com/ws/2008/06/identity/claims/role":
+            "Admin"
+        })
+      ) +
+      ".signature"
+  );
+
+  // ✅ Default axios mock response
   api.get.mockResolvedValue({
     data: { $values: [{ id: 1, make: "Toyota", model: "Corolla" }] }
   });
 
-  // Spy on console.error to suppress error logs in test output
+  // ✅ Suppress console errors in test output
   consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterEach(() => {
-  // Restore mocks
   jest.clearAllMocks();
-  if (consoleErrorSpy) {
-    consoleErrorSpy.mockRestore();
-  }
+  localStorage.clear();
+  if (consoleErrorSpy) consoleErrorSpy.mockRestore();
 });
 
-test("renders car data in DashboardPage", async () => {
-  render(<DashboardPage />);
+// ✅ Helper to wrap component with Router + AuthProvider
+function renderWithProviders(ui) {
+  return render(
+    <MemoryRouter>
+      <AuthProvider>{ui}</AuthProvider>
+    </MemoryRouter>
+  );
+}
 
-  // Wait for the mocked data to load
+test("renders car data in DashboardPage", async () => {
+  renderWithProviders(<DashboardPage />);
+
   await waitFor(() => {
     expect(screen.getByText("Toyota")).toBeInTheDocument();
     expect(screen.getByText("Corolla")).toBeInTheDocument();
@@ -46,10 +67,9 @@ test("renders car data in DashboardPage", async () => {
 });
 
 test("shows error message when API fails", async () => {
-  // Force axios mock to reject
   api.get.mockRejectedValueOnce(new Error("Network error"));
 
-  render(<DashboardPage />);
+  renderWithProviders(<DashboardPage />);
 
   await waitFor(() => {
     expect(screen.getByText("Error fetching Data...")).toBeInTheDocument();
