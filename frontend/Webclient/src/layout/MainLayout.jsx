@@ -62,6 +62,9 @@ export default function MainLayout() {
                   Register user
                 </Button>
               )}
+                <Button color="inherit" component={Link} to="/profile">
+                Profile
+              </Button>
 
               <Button color="inherit" component={Link} to="/about">
                 About

@@ -9,6 +9,7 @@ import LogoutPage from './pages/LogoutPage';
 import ProtectedRoute from './components/auth/ProtectedRoutes';
 import RegisterPage from './pages/RegisterPage';
 import AdminRoute from './components/auth/AdminRoute';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -49,6 +50,14 @@ function App() {
             <AdminRoute>
               <RegisterPage /> {/*Admin only page */}
             </AdminRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
           }
         />
       </Route>
