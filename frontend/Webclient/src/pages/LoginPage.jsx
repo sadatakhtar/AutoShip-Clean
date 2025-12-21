@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import axios from 'axios';
+import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 const LoginPage = ({ onLogin }) => {
@@ -17,13 +17,7 @@ const LoginPage = ({ onLogin }) => {
 
     try {
       console.log('inside try');
-      const response = await axios.post(
-        'http://localhost:5065/api/auth/login',
-        {
-          username,
-          password,
-        }
-      );
+      const response = await api.post('/auth/login', { username, password });
 
       const { token } = response.data;
 
@@ -32,7 +26,7 @@ const LoginPage = ({ onLogin }) => {
 
       navigate('/home');
     } catch (err) {
-      console.error('Login failed:', error.response?.data || error?.message);
+      console.error('Login failed:', err.response?.data || err?.message);
       alert('Invalid credentials');
       setError('Invalid username or password');
     }
