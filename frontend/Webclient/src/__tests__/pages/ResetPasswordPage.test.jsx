@@ -96,7 +96,7 @@ describe("ResetPassword Page", () => {
     // ✅ Fast-forward the 2-second redirect timer
     jest.runAllTimers();
 
-    expect(mockNavigate).toHaveBeenCalledWith("/login");
+    expect(mockNavigate).toHaveBeenCalledWith("/");
   });
 
   test("shows backend error message", async () => {

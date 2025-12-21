@@ -9,7 +9,8 @@ export default function RegisterPage() {
   const [form, setForm] = useState({
     username: '',
     password: '',
-    role: 'User',
+    email: '',
+    role: '',
   });
 
   // ✅ Check if user is Admin
@@ -62,12 +63,24 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit}>
           <TextField
+          
             variant="standard"
             fullWidth
             label="Username"
             name="username"
             margin="normal"
             value={form.username}
+            onChange={handleChange}
+            required
+          />
+
+          <TextField
+            variant="standard"
+            fullWidth
+            label="Email"
+            name="email"
+            margin="normal"
+            value={form.email}
             onChange={handleChange}
             required
           />
