@@ -19,9 +19,6 @@ import AddCarModal from './modals/AddCarModal';
 import Loading from './Loading';
 
 const CarTable = ({ data, isLoading, error, open, handleClose }) => {
-
-  console.log('DDDD', data);
-
   // Handle loading state first
   if (isLoading) {
     return <Loading message="Loading data..." />;
@@ -39,7 +36,6 @@ const CarTable = ({ data, isLoading, error, open, handleClose }) => {
 
   return (
     <Box>
-     
       <TableContainer component={Paper}>
         <Table>
           <TableHead>

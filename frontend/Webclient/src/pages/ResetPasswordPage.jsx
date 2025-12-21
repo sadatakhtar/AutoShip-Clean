@@ -33,7 +33,7 @@ export default function ResetPassword() {
 
       setSuccess('Password reset successfully. You can now log in.');
       setTimeout(() => {
-        navigate('/login');
+        navigate('/');
       }, 2000);
     } catch (err) {
       const msg = err?.response?.data || 'Invalid or expired reset link.';
