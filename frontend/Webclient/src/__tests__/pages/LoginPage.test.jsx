@@ -130,4 +130,32 @@ describe('LoginPage', () => {
 
     expect(mockNavigate).toHaveBeenCalledWith('/forgot-password');
   });
+
+  test('failed login handles generic error without response.data', async () => {
+  api.post.mockRejectedValueOnce(new Error("Network down"));
+
+  render(
+    <MemoryRouter>
+      <LoginPage />
+    </MemoryRouter>
+  );
+
+  fireEvent.change(screen.getByLabelText(/username/i), {
+    target: { value: "john" },
+  });
+
+  fireEvent.change(screen.getByLabelText(/password/i), {
+    target: { value: "123" },
+  });
+
+  fireEvent.click(screen.getByRole("button", { name: /login/i }));
+
+  await waitFor(() => {
+   expect(global.alert).toHaveBeenCalledWith("Invalid credentials");
+  });
+
+  expect(
+    screen.getByText("Invalid username or password")
+  ).toBeInTheDocument();
+});
 });
