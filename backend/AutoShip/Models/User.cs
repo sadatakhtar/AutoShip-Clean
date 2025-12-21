@@ -8,5 +8,7 @@
         public string PasswordHash { get; set; } 
         public string Role { get; set; }
         public string SecurityStamp { get; set; } = Guid.NewGuid().ToString();
+        public string? ResetToken { get; set; }
+        public DateTime? ResetTokenExpiry { get; set; }
     }
 }

@@ -81,6 +81,13 @@ const LoginPage = ({ onLogin }) => {
           >
             Login
           </Button>
+          <Typography
+            sx={{ mt: 2, cursor: 'pointer' }}
+            color="primary"
+            onClick={() => navigate('/forgot-password')}
+          >
+            Forgot Password?
+          </Typography>
         </form>
       </Paper>
     </Box>
