@@ -133,6 +133,7 @@ namespace AutoShip.Controllers
 
             // ✅ Generate strong secure token
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
+            var encodedToken = Uri.EscapeDataString(token);
 
             user.ResetToken = token;
             user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1);
@@ -141,7 +142,8 @@ namespace AutoShip.Controllers
             await _db.SaveChangesAsync();
 
             // ✅ Build reset link
-            var resetLink = $"http://localhost:3000/reset-password?token={token}";
+            var frontendUrl = _config["Frontend:BaseUrl"];
+            var resetLink = $"{frontendUrl}/reset-password?token={encodedToken}";
 
             // ✅ Send email
             await _emailService.SendEmailAsync(
