@@ -10,6 +10,8 @@ import ProtectedRoute from './components/auth/ProtectedRoutes';
 import RegisterPage from './pages/RegisterPage';
 import AdminRoute from './components/auth/AdminRoute';
 import Profile from './pages/Profile';
+import ForgotPassword from './pages/ForgotPasswordPage';
+import ResetPassword from './pages/ResetPasswordPage';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
       <Route element={<AuthLayout />}>
         <Route path="/" element={<LoginPage />} />
         <Route path="/logout" element={<LogoutPage />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Route>
 
       <Route element={<MainLayout />}>
