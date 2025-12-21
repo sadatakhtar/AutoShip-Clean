@@ -28,6 +28,7 @@ export default function ForgotPassword() {
       await api.post('/auth/forgot-password', { email });
       setSuccess('If that email exists, a reset link has been sent.');
     } catch (err) {
+      console.error('Failed to send reset link',err);
       setError('Something went wrong. Try again later.');
     }
   };
