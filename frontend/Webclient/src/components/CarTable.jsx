@@ -18,7 +18,7 @@ import { getVehicleStatus } from '../utils/carTableHelpers';
 import AddCarModal from './modals/AddCarModal';
 import Loading from './Loading';
 
-const CarTable = ({ data, isLoading, error, open, handleClose }) => {
+const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
   // Handle loading state first
   if (isLoading) {
     return <Loading message="Loading data..." />;
@@ -79,7 +79,9 @@ const CarTable = ({ data, isLoading, error, open, handleClose }) => {
                   <TableCell>{vehicle?.ivaStatus}</TableCell>
                   <TableCell>{vehicle?.motStatus}</TableCell>
                   <TableCell>{getVehicleStatus(vehicle?.status)}</TableCell>
-                  <TableCell>{<EditAndDelBtns />}</TableCell>
+                  <TableCell>
+                    {<EditAndDelBtns id={vehicle?.id} onDelete={onDelete} />}
+                  </TableCell>
                 </TableRow>
               ))
             ) : (

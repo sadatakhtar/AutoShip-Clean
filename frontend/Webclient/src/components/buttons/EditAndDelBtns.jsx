@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import DeleteModal from '../modals/DeleteModal';
 
 const MyButton = styled.button`
   background-color: red;
@@ -14,25 +15,30 @@ const MyButton = styled.button`
   }
 `;
 
-const EditAndDelBtns = () => {
+const EditAndDelBtns = ({ id, onDelete }) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div style={{ padding: '5px' }}>
-        <MyButton
-          style={{ backgroundColor: 'green' }}
-          onClick={() => console.log('Edit btn clicked')}
-        >
+        <MyButton style={{ backgroundColor: 'green' }} onClick={() => {}}>
           Edit
         </MyButton>
       </div>
       <div style={{ padding: '5px' }}>
-        <MyButton
-          className="myButton"
-          onClick={() => console.log('Del btn clicked')}
-        >
+        <MyButton className="myButton" onClick={() => setOpen(true)}>
           Delete
         </MyButton>
       </div>
+      <DeleteModal
+        open={open}
+        carId={id}
+        onClose={() => setOpen(false)}
+        onConfirm={(id) => {
+          onDelete(id);
+          setOpen(false);
+        }}
+      />
     </div>
   );
 };
