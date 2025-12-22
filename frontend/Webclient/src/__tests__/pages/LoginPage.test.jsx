@@ -3,8 +3,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from '../../pages/LoginPage';
 import { MemoryRouter } from 'react-router-dom';
 import api from '../../api/axios';
- 
-jest.mock("../../api/axios", () => ({
+import { AuthProvider } from '../../context/AuthContext';
+
+jest.mock('../../api/axios', () => ({
   post: jest.fn(),
 }));
 
@@ -27,9 +28,11 @@ describe('LoginPage', () => {
 
   test('renders login form correctly', () => {
     render(
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     expect(screen.getByRole('heading', { name: /login/i })).toBeInTheDocument();
@@ -40,9 +43,11 @@ describe('LoginPage', () => {
 
   test('updates username and password fields', () => {
     render(
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     fireEvent.change(screen.getByLabelText(/username/i), {
@@ -63,9 +68,11 @@ describe('LoginPage', () => {
     });
 
     render(
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     fireEvent.change(screen.getByLabelText(/username/i), {
@@ -79,10 +86,10 @@ describe('LoginPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-      expect(api.post).toHaveBeenCalledWith(
-        '/auth/login',
-        { username: 'john', password: 'Pass123!' }
-      );
+      expect(api.post).toHaveBeenCalledWith('/auth/login', {
+        username: 'john',
+        password: 'Pass123!',
+      });
     });
 
     expect(localStorage.getItem('jwtToken')).toBe('fake-jwt-token');
@@ -95,9 +102,11 @@ describe('LoginPage', () => {
     });
 
     render(
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     fireEvent.change(screen.getByLabelText(/username/i), {
@@ -121,9 +130,11 @@ describe('LoginPage', () => {
 
   test("clicking 'Forgot Password?' navigates to /forgot-password", () => {
     render(
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
     );
 
     fireEvent.click(screen.getByText(/forgot password/i));
@@ -132,30 +143,32 @@ describe('LoginPage', () => {
   });
 
   test('failed login handles generic error without response.data', async () => {
-  api.post.mockRejectedValueOnce(new Error("Network down"));
+    api.post.mockRejectedValueOnce(new Error('Network down'));
 
-  render(
-    <MemoryRouter>
-      <LoginPage />
-    </MemoryRouter>
-  );
+    render(
+      <AuthProvider>
+        <MemoryRouter>
+          <LoginPage />
+        </MemoryRouter>
+      </AuthProvider>
+    );
 
-  fireEvent.change(screen.getByLabelText(/username/i), {
-    target: { value: "john" },
+    fireEvent.change(screen.getByLabelText(/username/i), {
+      target: { value: 'john' },
+    });
+
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: '123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(global.alert).toHaveBeenCalledWith('Invalid credentials');
+    });
+
+    expect(
+      screen.getByText('Invalid username or password')
+    ).toBeInTheDocument();
   });
-
-  fireEvent.change(screen.getByLabelText(/password/i), {
-    target: { value: "123" },
-  });
-
-  fireEvent.click(screen.getByRole("button", { name: /login/i }));
-
-  await waitFor(() => {
-   expect(global.alert).toHaveBeenCalledWith("Invalid credentials");
-  });
-
-  expect(
-    screen.getByText("Invalid username or password")
-  ).toBeInTheDocument();
-});
 });

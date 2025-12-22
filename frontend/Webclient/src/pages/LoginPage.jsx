@@ -2,27 +2,30 @@ import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const { login } = useAuth();
+
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    console.log('handleSubmit!!!1');
     e.preventDefault();
     setError('');
 
     try {
-      console.log('inside try');
       const response = await api.post('/auth/login', { username, password });
-
       const { token } = response.data;
 
       // Save token (localStorage for simplicity)
       localStorage.setItem('jwtToken', token);
+
+      // This is needed so new logged in user is updated
+      login(token);
 
       navigate('/home');
     } catch (err) {
