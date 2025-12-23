@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 const DashboardTitleAndModal = ({
   handleOpen,
   title,
-  addLabel,
+  addLabel = 'none',
   handleBack,
 }) => {
   return (
@@ -38,22 +38,24 @@ const DashboardTitleAndModal = ({
           alignItems="center"
           mb={2}
         >
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
-            }}
-          >
-            <Typography variant="h7">{addLabel}</Typography>
-            <IconButton
-              color="primary"
-              aria-label="add car"
-              onClick={handleOpen}
+          {addLabel !== 'none' && (
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+              }}
             >
-              <AddIcon />
-            </IconButton>
-          </div>
+              <Typography variant="h7">{addLabel}</Typography>
+              <IconButton
+                color="primary"
+                aria-label="add car"
+                onClick={handleOpen}
+              >
+                <AddIcon />
+              </IconButton>
+            </div>
+          )}
         </Box>
       </div>
     </div>

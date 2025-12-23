@@ -58,11 +58,11 @@ export default function MainLayout() {
               </Button>
 
               {user?.role === 'Admin' && (
-                <Button color="inherit" component={Link} to="/register">
-                  Register user
+                <Button color="inherit" component={Link} to="/settings">
+                  Settings
                 </Button>
               )}
-                <Button color="inherit" component={Link} to="/profile">
+              <Button color="inherit" component={Link} to="/profile">
                 Profile
               </Button>
 

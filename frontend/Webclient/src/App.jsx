@@ -12,6 +12,7 @@ import AdminRoute from './components/auth/AdminRoute';
 import Profile from './pages/Profile';
 import ForgotPassword from './pages/ForgotPasswordPage';
 import ResetPassword from './pages/ResetPasswordPage';
+import SettingsPage from './pages/SettingsPage';
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
           element={
             <AdminRoute>
               <RegisterPage /> {/*Admin only page */}
+            </AdminRoute>
+          }
+        />
+           <Route
+          path="/settings"
+          element={
+            <AdminRoute>
+              <SettingsPage /> {/*Admin only page */}
             </AdminRoute>
           }
         />
