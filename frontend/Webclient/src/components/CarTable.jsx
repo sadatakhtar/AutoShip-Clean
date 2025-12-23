@@ -17,6 +17,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { getVehicleStatus } from '../utils/carTableHelpers';
 import AddCarModal from './modals/AddCarModal';
 import Loading from './Loading';
+import PropTypes from "prop-types";
 
 const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
   // Handle loading state first
@@ -98,6 +99,15 @@ const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
       <AddCarModal open={open} handleClose={handleClose} />
     </Box>
   );
+};
+
+CarTable.propTypes = {
+  data: PropTypes.array.isRequired,
+  isLoading: PropTypes.bool,
+  error: PropTypes.string,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default CarTable;

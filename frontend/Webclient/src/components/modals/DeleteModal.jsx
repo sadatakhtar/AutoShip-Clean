@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,6 +7,7 @@ import {
   Button,
   Typography,
 } from '@mui/material';
+import PropTypes from "prop-types";
 
 export default function DeleteModal({ open, onClose, onConfirm, carId }) {
   return (
@@ -36,3 +37,9 @@ export default function DeleteModal({ open, onClose, onConfirm, carId }) {
     </Dialog>
   );
 }
+DeleteModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onConfirm: PropTypes.func.isRequired,
+  carId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+};

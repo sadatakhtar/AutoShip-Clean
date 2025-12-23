@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DeleteModal from '../modals/DeleteModal';
+import PropTypes from "prop-types";
 
 const MyButton = styled.button`
   background-color: red;
@@ -41,6 +42,11 @@ const EditAndDelBtns = ({ id, onDelete }) => {
       />
     </div>
   );
+};
+
+EditAndDelBtns.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default EditAndDelBtns;
