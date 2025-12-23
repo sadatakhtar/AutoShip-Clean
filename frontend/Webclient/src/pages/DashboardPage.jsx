@@ -37,44 +37,44 @@ const DashboardPage = () => {
   };
 
   const handleDelete = async (id) => {
-  try {
-    const res = await api.delete(`/Car/${id}`);
+    try {
+      const res = await api.delete(`/Car/${id}`);
 
-    // 204 = success
-    if (res.status === 204) {
-      setCars(prev => (prev || []).filter(c => c.id !== id));
-      return;
+      // 204 = success
+      if (res.status === 204) {
+        setCars((prev) => (prev || []).filter((c) => c.id !== id));
+        return;
+      }
+    } catch (err) {
+      console.error('Delete error:', err);
+
+      // If no response, it's a network or client-side error
+      if (!err.response) {
+        alert('Delete failed due to a network or client error.');
+        return;
+      }
+
+      const status = err.response.status;
+
+      if (status === 403) {
+        alert('Delete failed: only admin users can perform this task.');
+        return;
+      }
+
+      if (status === 401) {
+        alert('Delete failed: you must be logged in.');
+        return;
+      }
+
+      if (status === 404) {
+        alert('Delete failed: vehicle not found.');
+        return;
+      }
+
+      // Fallback for anything unexpected
+      alert('Delete failed due to an unexpected server error.');
     }
-  } catch (err) {
-    console.error("Delete error:", err);
-
-    // If no response, it's a network or client-side error
-    if (!err.response) {
-      alert("Delete failed due to a network or client error.");
-      return;
-    }
-
-    const status = err.response.status;
-
-    if (status === 403) {
-      alert("Delete failed: only admin users can perform this task.");
-      return;
-    }
-
-    if (status === 401) {
-      alert("Delete failed: you must be logged in.");
-      return;
-    }
-
-    if (status === 404) {
-      alert("Delete failed: vehicle not found.");
-      return;
-    }
-
-    // Fallback for anything unexpected
-    alert("Delete failed due to an unexpected server error.");
-  }
-};
+  };
 
   return (
     <div data-testid="dashboard-component" style={{ marginTop: 100 }}>
