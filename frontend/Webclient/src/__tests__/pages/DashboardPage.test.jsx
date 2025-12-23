@@ -21,10 +21,21 @@ jest.mock('../../api/axios', () => ({
 
 // Mock child components to isolate DashboardPage logic
 jest.mock('../../components/CarTable', () => (props) => (
-  <div data-testid="car-table">
+  <div
+    data-testid="car-table"
+    data-open={props.open ? 'true' : 'false'}
+    data-error={props.error || ''}
+    data-loading={props.loading ? 'true' : 'false'}
+  >
     <button data-testid="delete-btn" onClick={() => props.onDelete(5)}>
       Delete Car
     </button>
+
+    {/* NEW: simulate modal close */}
+    <button data-testid="close-modal" onClick={props.handleClose}>
+      Close Modal
+    </button>
+
     <div data-testid="car-data">{JSON.stringify(props.data)}</div>
   </div>
 ));
@@ -148,6 +159,163 @@ describe('DashboardPage', () => {
     await waitFor(() => {
       expect(window.alert).toHaveBeenCalledWith(
         'Delete failed due to a network or client error.'
+      );
+    });
+  });
+
+  // NEW TEST — modal opens when clicking "Open Modal"
+  test('opens modal when open-modal button clicked', async () => {
+    api.get.mockResolvedValue({ data: [] });
+
+    renderPage();
+
+    // Modal should be closed initially
+    expect(screen.getByTestId('car-table')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByTestId('open-modal'));
+
+    // CarTable receives open=true
+    await waitFor(() => {
+      expect(screen.getByTestId('car-table')).toHaveAttribute(
+        'data-open',
+        'true'
+      );
+    });
+  });
+
+  // NEW TEST — modal closes when handleClose is triggered
+  test('closes modal when handleClose is called', async () => {
+    api.get.mockResolvedValue({ data: [] });
+
+    renderPage();
+
+    // Open modal
+    fireEvent.click(screen.getByTestId('open-modal'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('car-table')).toHaveAttribute(
+        'data-open',
+        'true'
+      );
+    });
+
+    // Close modal via mock CarTable
+    fireEvent.click(screen.getByTestId('close-modal'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('car-table')).toHaveAttribute(
+        'data-open',
+        'false'
+      );
+    });
+  });
+
+  // NEW TEST — delete fails with 401 (not logged in)
+  test('delete fails with 401 (not logged in)', async () => {
+    api.get.mockResolvedValue({
+      data: [{ id: 5, make: 'BMW' }],
+    });
+
+    api.delete.mockRejectedValue({
+      response: { status: 401 },
+    });
+
+    window.alert = jest.fn();
+
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('delete-btn'));
+
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith(
+        'Delete failed: you must be logged in.'
+      );
+    });
+  });
+
+  // NEW TEST — delete fails with 404 (vehicle not found)
+  test('delete fails with 404 (vehicle not found)', async () => {
+    api.get.mockResolvedValue({
+      data: [{ id: 5, make: 'BMW' }],
+    });
+
+    api.delete.mockRejectedValue({
+      response: { status: 404 },
+    });
+
+    window.alert = jest.fn();
+
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('delete-btn'));
+
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith(
+        'Delete failed: vehicle not found.'
+      );
+    });
+  });
+
+  // NEW TEST — delete fails with unexpected server error
+  test('delete fails with unexpected server error', async () => {
+    api.get.mockResolvedValue({
+      data: [{ id: 5, make: 'BMW' }],
+    });
+
+    api.delete.mockRejectedValue({
+      response: { status: 500 },
+    });
+
+    window.alert = jest.fn();
+
+    renderPage();
+
+    fireEvent.click(screen.getByTestId('delete-btn'));
+
+    await waitFor(() => {
+      expect(window.alert).toHaveBeenCalledWith(
+        'Delete failed due to an unexpected server error.'
+      );
+    });
+  });
+
+  // NEW TEST — loading state is passed to CarTable
+  test('sets loading state during fetch', async () => {
+    let resolveGet;
+    api.get.mockReturnValue(
+      new Promise((resolve) => {
+        resolveGet = resolve;
+      })
+    );
+
+    renderPage();
+
+    // While unresolved, loading should be true
+    expect(screen.getByTestId('car-table')).toHaveAttribute(
+      'data-loading',
+      'true'
+    );
+
+    resolveGet({ data: [] });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('car-table')).toHaveAttribute(
+        'data-loading',
+        'false'
+      );
+    });
+  });
+
+  // NEW TEST — error state is passed to CarTable
+  test('passes error state to CarTable when fetch fails', async () => {
+    api.get.mockRejectedValue(new Error('Fetch failed'));
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('car-table')).toHaveAttribute(
+        'data-error',
+        'Error fetching Data...'
       );
     });
   });
