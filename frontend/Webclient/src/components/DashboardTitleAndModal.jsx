@@ -47,13 +47,15 @@ const DashboardTitleAndModal = ({
               }}
             >
               <Typography variant="h7">{addLabel}</Typography>
-              <IconButton
-                color="primary"
-                aria-label="add car"
-                onClick={handleOpen}
-              >
-                <AddIcon />
-              </IconButton>
+              <div style={{ padding: "5px", paddingLeft: "10px"}}>
+                <IconButton
+                  color="primary"
+                  aria-label="add car"
+                  onClick={handleOpen}
+                >
+                  <AddIcon />
+                </IconButton>
+              </div>
             </div>
           )}
         </Box>
