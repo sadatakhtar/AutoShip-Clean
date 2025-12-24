@@ -7,6 +7,12 @@ import About from "../pages/About";
 import DashboardPage from "../pages/DashboardPage";
 import api from "../api/axios";
 
+
+let mockUser = { username: "test", role: "User" };
+
+jest.mock("../context/AuthContext", () => ({
+  useAuth: () => ({ user: mockUser }),
+}));
 // Mock the configured axios instance
 jest.mock("../api/axios", () => ({
   get: jest.fn(),
