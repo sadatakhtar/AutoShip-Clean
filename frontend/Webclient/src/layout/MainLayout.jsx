@@ -50,26 +50,86 @@ export default function MainLayout() {
               )}
             </div>
             <div style={{ paddingRight: '10px' }}>
-              <Button color="inherit" component={Link} to="/home">
+              <Button
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    color: '#96ee08ff',
+                  },
+                }}
+                color="inherit"
+                component={Link}
+                to="/home"
+              >
                 Home
               </Button>
-              <Button color="inherit" component={Link} to="/dashboard">
+              <Button
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    color: '#96ee08ff',
+                  },
+                }}
+                color="inherit"
+                component={Link}
+                to="/dashboard"
+              >
                 Dashboard
               </Button>
 
               {user?.role === 'Admin' && (
-                <Button color="inherit" component={Link} to="/settings">
+                <Button
+                  sx={{
+                    color: 'white',
+                    '&:hover': {
+                      color: '#96ee08ff',
+                    },
+                  }}
+                  color="inherit"
+                  component={Link}
+                  to="/settings"
+                >
                   Settings
                 </Button>
               )}
-              <Button color="inherit" component={Link} to="/profile">
+              <Button
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    color: '#96ee08ff', // light blue or any color you want
+                  },
+                }}
+                color="inherit"
+                component={Link}
+                to="/profile"
+              >
                 Profile
               </Button>
 
-              <Button color="inherit" component={Link} to="/about">
+              <Button
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    color: '#96ee08ff',
+                  },
+                }}
+                color="inherit"
+                component={Link}
+                to="/about"
+              >
                 About
               </Button>
-              <Button color="inherit" component={Link} to="/logout">
+              <Button
+                sx={{
+                  color: 'white',
+                  '&:hover': {
+                    color: '#96ee08ff',
+                  },
+                }}
+                color="inherit"
+                component={Link}
+                to="/logout"
+              >
                 Log Out
               </Button>
             </div>
