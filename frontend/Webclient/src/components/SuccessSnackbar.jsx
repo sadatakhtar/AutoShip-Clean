@@ -17,7 +17,7 @@ const SuccessSnackbar = ({ open, message, onClose }) => {
   );
 };
 
-SuccessSnackbar.PropTypes = {
+SuccessSnackbar.propTypes = {
     open: PropTypes.bool.isRequired,
     message: PropTypes.string,
     onClose: PropTypes.func.isRequired,
