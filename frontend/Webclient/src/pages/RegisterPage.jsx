@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
+import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
+
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     username: '',
@@ -41,10 +43,16 @@ export default function RegisterPage() {
 
     try {
       await api.post('/auth/register', form);
-      navigate('/dashboard');
+      navigate('/settings', {
+        state: { successMessage: 'New user created successfully' },
+      });
     } catch (err) {
       setError('Registration failed');
     }
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -52,10 +60,14 @@ export default function RegisterPage() {
       sx={{
         height: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
-        alignItems: 'center',
       }}
     >
+      <Box sx={{ mb: 2 }}>
+        <DashboardTitleAndModal title="Create user" handleBack={handleBack} />
+      </Box>
+
       <Paper elevation={3} sx={{ padding: 4, width: 400 }}>
         <Typography variant="h5" mb={2}>
           Create New User
@@ -63,7 +75,6 @@ export default function RegisterPage() {
 
         <form onSubmit={handleSubmit}>
           <TextField
-          
             variant="standard"
             fullWidth
             label="Username"
