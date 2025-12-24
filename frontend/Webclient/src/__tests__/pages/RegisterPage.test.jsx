@@ -172,7 +172,7 @@ describe("RegisterPage", () => {
       });
     });
 
-    expect(mockNavigate).toHaveBeenCalledWith("/dashboard");
+    expect(mockNavigate).toHaveBeenCalledWith("/settings", {"state": {"successMessage": "New user created successfully"}});
   });
 
   test("shows error message when registration fails", async () => {

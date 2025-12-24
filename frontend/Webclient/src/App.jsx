@@ -13,6 +13,7 @@ import Profile from './pages/Profile';
 import ForgotPassword from './pages/ForgotPasswordPage';
 import ResetPassword from './pages/ResetPasswordPage';
 import SettingsPage from './pages/SettingsPage';
+import ManageUsersPage from './pages/ManageUsersPage';
 
 function App() {
   return (
@@ -57,11 +58,19 @@ function App() {
             </AdminRoute>
           }
         />
-           <Route
+        <Route
           path="/settings"
           element={
             <AdminRoute>
               <SettingsPage /> {/*Admin only page */}
+            </AdminRoute>
+          }
+        />
+            <Route
+          path="/manage-users"
+          element={
+            <AdminRoute>
+              <ManageUsersPage /> {/*Admin only page */}
             </AdminRoute>
           }
         />

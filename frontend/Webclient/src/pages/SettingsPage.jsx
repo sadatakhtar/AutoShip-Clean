@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Typography,
@@ -8,14 +8,29 @@ import {
   Button,
 } from '@mui/material';
 import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import SuccessSnackbar from '../components/SuccessSnackbar';
 
 const SettingsPage = () => {
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const [snackbarOpen, setSnackbarOpen] = useState(
+    Boolean(location.state?.successMessage)
+  );
 
   const handleBack = () => {
     navigate(-1);
   };
+
+  const handleRegisterUser = () => {
+    navigate('/register');
+  };
+
+  const handleRemoveUsers = () => {
+    navigate("/manage-users")
+  }
+
   return (
     <Box sx={{ mt: 10, px: 0 }}>
       <Box sx={{ mb: 2 }}>
@@ -30,7 +45,9 @@ const SettingsPage = () => {
               <Typography variant="body2" sx={{ mb: 2 }}>
                 Add a new user to the system.
               </Typography>
-              <Button variant="contained">Open</Button>
+              <Button variant="contained" onClick={handleRegisterUser}>
+                Open
+              </Button>
             </CardContent>
           </Card>
         </Grid>
@@ -54,7 +71,7 @@ const SettingsPage = () => {
               <Typography variant="body2" sx={{ mb: 2 }}>
                 Remove a user from the system.
               </Typography>
-              <Button variant="contained" color="error">
+              <Button variant="contained" color="error" onClick={handleRemoveUsers}>
                 Open
               </Button>
             </CardContent>
@@ -73,6 +90,12 @@ const SettingsPage = () => {
           </Card>
         </Grid>
       </Grid>
+
+      <SuccessSnackbar
+        open={snackbarOpen}
+        message={location.state?.successMessage}
+        onClose={() => setSnackbarOpen(false)}
+      />
     </Box>
   );
 };
