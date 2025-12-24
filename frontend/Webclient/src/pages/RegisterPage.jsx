@@ -3,12 +3,10 @@ import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
-import SuccessSnackbar from '../components/SuccessSnackbar';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
     username: '',
@@ -45,9 +43,8 @@ export default function RegisterPage() {
 
     try {
       await api.post('/auth/register', form);
-      setSnackbarOpen(true);
       navigate('/settings', {
-        state: { successMessage: "New user created successfully"}
+        state: { successMessage: 'New user created successfully' },
       });
     } catch (err) {
       setError('Registration failed');
@@ -139,12 +136,6 @@ export default function RegisterPage() {
             Back to Dashboard
           </Button>
         </form>
-
-        {/* <SuccessSnackbar
-          open={snackbarOpen}
-          message="New user created successfully"
-          onClose={() => setSnackbarOpen(false)}
-        /> */}
       </Paper>
     </Box>
   );

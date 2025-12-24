@@ -1,5 +1,6 @@
 import React from "react";
 import { Snackbar, Alert } from "@mui/material";
+import PropTypes from "prop-types";
 
 const SuccessSnackbar = ({ open, message, onClose }) => {
   return (
@@ -15,5 +16,11 @@ const SuccessSnackbar = ({ open, message, onClose }) => {
     </Snackbar>
   );
 };
+
+SuccessSnackbar.PropTypes = {
+    open: PropTypes.bool,
+    message: PropTypes.string,
+    onClose: PropTypes.func,
+}
 
 export default SuccessSnackbar;
