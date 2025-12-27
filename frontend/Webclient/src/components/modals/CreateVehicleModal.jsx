@@ -26,7 +26,7 @@ const ivaStatuses = ['Pending', 'Passed', 'Failed'];
 const motStatuses = ['Pending', 'Valid', 'Expired'];
 const v55Statuses = ['Pending', 'Submitted', 'Approved'];
 
-export default function CreateVehicleModal({ open, setOpen }) {
+export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
   const [form, setForm] = useState({
     vin: '',
     make: '',
@@ -51,7 +51,6 @@ export default function CreateVehicleModal({ open, setOpen }) {
 
     try {
       await api.post('/newcar', {
-        // dto:{
         VIN: form.vin,
         Make: form.make,
         Model: form.model,
@@ -61,11 +60,13 @@ export default function CreateVehicleModal({ open, setOpen }) {
         MOTStatus: form.motStatus,
         V55Status: form.v55Status,
         Documents: [],
-        //  }
       });
 
       setSuccess('Vehicle created successfully');
-      setTimeout(() => setOpen(false), 1200);
+      setTimeout(() => {
+        setOpen(false);
+        onSuccess(); // refreshes dashboard car list
+      }, 1200);
     } catch (err) {
       const msg =
         err?.response?.data?.message ||
@@ -246,4 +247,5 @@ export default function CreateVehicleModal({ open, setOpen }) {
 CreateVehicleModal.propTypes = {
   open: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
+  onSuccess: PropTypes.func.isRequired,
 };

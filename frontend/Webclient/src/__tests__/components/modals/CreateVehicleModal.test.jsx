@@ -15,8 +15,8 @@ beforeAll(() => {
   jest.useFakeTimers('modern');
 });
 
-const setup = (open = true, setOpen = jest.fn()) => {
-  return render(<CreateVehicleModal open={open} setOpen={setOpen} />);
+const setup = (open = true, setOpen = jest.fn(), onSuccess = jest.fn()) => {
+  return render(<CreateVehicleModal open={open} setOpen={setOpen} onSuccess={onSuccess} />);
 };
 
 // FIXED helper for MUI Select
