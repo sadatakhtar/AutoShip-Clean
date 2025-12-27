@@ -13,6 +13,7 @@ import {
   Box,
 } from '@mui/material';
 import api from '../../api/axios';
+import PropTypes from 'prop-types';
 
 const carStatuses = [
   'Available',
@@ -168,16 +169,6 @@ export default function CreateVehicleModal({ open, setOpen }) {
             </TextField>
           </Grid>
 
-          {/* --- OPTION 3: Grouped Compliance Section --- */}
-          {/* <Grid item xs={12}>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 'bold', mb: 1, mt: 1 }}
-            >
-              Compliance Status
-            </Typography>
-          </Grid> */}
-
           <Grid item xs={12} sm={6} md={4}>
             <TextField
               select
@@ -251,3 +242,8 @@ export default function CreateVehicleModal({ open, setOpen }) {
     </Dialog>
   );
 }
+
+CreateVehicleModal.propTypes = {
+  open: PropTypes.bool.isRequired,
+  setOpen: PropTypes.func.isRequired,
+};

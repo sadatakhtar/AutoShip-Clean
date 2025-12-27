@@ -111,6 +111,7 @@ CarTable.propTypes = {
   isLoading: PropTypes.bool,
   error: PropTypes.string,
   open: PropTypes.bool,
+  setOpen: PropTypes.func.isRequired,
   handleClose: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
 };
