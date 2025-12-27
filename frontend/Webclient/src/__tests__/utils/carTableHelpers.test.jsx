@@ -1,4 +1,4 @@
-import { getVehicleStatus } from '../../utils/carTableHelpers';
+import { getRowStyle, getVehicleStatus } from '../../utils/carTableHelpers';
 
 describe('getVehicleStatus', () => {
   test('returns correct status strings for each code', () => {
@@ -18,3 +18,30 @@ describe('getVehicleStatus', () => {
   });
 });
 
+describe('getRowStyle', () => {
+  test('returns empty object when status is null', () => {
+    expect(getRowStyle(null)).toEqual({});
+  });
+
+  test('returns empty object when status is undefined', () => {
+    expect(getRowStyle(undefined)).toEqual({});
+  });
+
+  test('returns amber background for Submitted', () => {
+    expect(getRowStyle('Submitted')).toEqual({
+      backgroundColor: '#ffecb3',
+    });
+  });
+
+  test('returns green background for Approved', () => {
+    expect(getRowStyle('Approved')).toEqual({
+      backgroundColor: '#c8e6c9',
+    });
+  });
+
+  test('returns empty object for any other status', () => {
+    expect(getRowStyle('Rejected')).toEqual({});
+    expect(getRowStyle('Pending')).toEqual({});
+    expect(getRowStyle('')).toEqual({});
+  });
+});
