@@ -119,7 +119,7 @@ CarTable.propTypes = {
   setOpen: PropTypes.func.isRequired,
   handleClose: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
-  refreshCars: PropTypes.func.isRequired,
+  refreshCarList: PropTypes.func.isRequired,
 };
 
 export default CarTable;
