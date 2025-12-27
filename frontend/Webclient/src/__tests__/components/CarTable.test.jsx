@@ -30,7 +30,7 @@ describe("CarTable Component", () => {
         model: "X5",
         ivaStatus: "Pending",
         motStatus: "Expired",
-        status: 6,
+        status: 'Approved',
       },
     ];
 
@@ -40,7 +40,7 @@ describe("CarTable Component", () => {
     expect(screen.getByText("Id")).toBeInTheDocument();
     expect(screen.getByText("Make")).toBeInTheDocument();
     expect(screen.getByText("Model")).toBeInTheDocument();
-    expect(screen.getByText("IVA Application")).toBeInTheDocument();
+    expect(screen.getByText("IVA")).toBeInTheDocument();
     expect(screen.getByText("MOT")).toBeInTheDocument();
     expect(screen.getByText("Status")).toBeInTheDocument();
     expect(screen.getByText("Action")).toBeInTheDocument();
@@ -50,7 +50,7 @@ describe("CarTable Component", () => {
     expect(screen.getByText("BMW")).toBeInTheDocument();
     expect(screen.getByText("Corolla")).toBeInTheDocument();
     expect(screen.getByText("X5")).toBeInTheDocument();
-    expect(screen.getByText("IVA completed")).toBeInTheDocument(); 
-    expect(screen.getByText("MOT completed")).toBeInTheDocument(); 
+    expect(screen.getByText("Approved")).toBeInTheDocument(); 
+    expect(screen.getByText("Valid")).toBeInTheDocument(); 
   });
 });

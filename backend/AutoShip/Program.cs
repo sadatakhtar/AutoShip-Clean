@@ -1,24 +1,30 @@
 using AutoShip.Configuration;
 using AutoShip.Data;
 using AutoShip.Models;
-using BCrypt.Net;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    Console.WriteLine(">>> ApiBehaviorOptions configured <<<");
+});
 // Add services to the container.
 builder.Services.AddMapster();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

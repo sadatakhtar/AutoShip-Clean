@@ -46,14 +46,19 @@ namespace AutoShip.Controllers
         }
         [Authorize]
         [HttpPost]
-        public async Task<ActionResult<Car>> AddCar(CarCreateDto dto)
+        public async Task<ActionResult<Car>> AddCar([FromBody] CarCreateDto dto)
         {
+            Console.WriteLine(">>> AddCar METHOD HIT <<<");
+            Console.WriteLine("DTO VIN: " + dto.VIN);
+            Console.WriteLine("DTO STATUS: " + dto.Status);
+            Console.WriteLine("CCCCCCC", dto);
+
             var car = dto.Adapt<Car>();
             _context.Cars.Add(car);
             await _context.SaveChangesAsync();
             return Ok(car.Id);
-
         }
+
         [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<Car>> UpdateCar(int id, Car updatedCar)

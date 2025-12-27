@@ -26,7 +26,7 @@ namespace AutoShip.Controllers
             var car = await _context.Cars.FindAsync(carId);
             if (car != null)
             {
-                car.Status = CarStatus.Registered;
+                car.Status = "Registered";
             }
 
 

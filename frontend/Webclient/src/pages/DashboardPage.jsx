@@ -90,6 +90,7 @@ const DashboardPage = () => {
         error={error}
         open={open}
         handleClose={handleClose}
+        setOpen={setOpen}
         onDelete={handleDelete}
       />
     </div>

@@ -9,17 +9,22 @@ import {
   Paper,
   CircularProgress,
   Box,
-  Typography,
-  IconButton,
 } from '@mui/material';
 import EditAndDelBtns from './buttons/EditAndDelBtns';
-import AddIcon from '@mui/icons-material/Add';
-import { getVehicleStatus } from '../utils/carTableHelpers';
-import AddCarModal from './modals/AddCarModal';
+import { getRowStyle } from '../utils/carTableHelpers';
 import Loading from './Loading';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
+import CreateVehicleModal from './modals/CreateVehicleModal';
 
-const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
+const CarTable = ({
+  data,
+  isLoading,
+  error,
+  open,
+  setOpen,
+  handleClose,
+  onDelete,
+}) => {
   // Handle loading state first
   if (isLoading) {
     return <Loading message="Loading data..." />;
@@ -44,7 +49,7 @@ const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
               <TableCell style={{ fontSize: 20 }}>Id</TableCell>
               <TableCell style={{ fontSize: 20 }}>Make</TableCell>
               <TableCell style={{ fontSize: 20 }}>Model</TableCell>
-              <TableCell style={{ fontSize: 20 }}>IVA Application</TableCell>
+              <TableCell style={{ fontSize: 20 }}>IVA</TableCell>
               <TableCell style={{ fontSize: 20 }}>MOT</TableCell>
               <TableCell style={{ fontSize: 20 }}>Status</TableCell>
               <TableCell style={{ fontSize: 20 }}>Action</TableCell>
@@ -68,8 +73,9 @@ const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
                 <TableRow
                   key={vehicle?.id}
                   sx={{
+                    ...getRowStyle(vehicle?.v55Status),
                     '&:hover': {
-                      backgroundColor: '#d8ddecff', // light blue hover
+                      backgroundColor: '#d8ddecff',
                       cursor: 'pointer',
                     },
                   }}
@@ -79,7 +85,7 @@ const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
                   <TableCell>{vehicle?.model}</TableCell>
                   <TableCell>{vehicle?.ivaStatus}</TableCell>
                   <TableCell>{vehicle?.motStatus}</TableCell>
-                  <TableCell>{getVehicleStatus(vehicle?.status)}</TableCell>
+                  <TableCell>{vehicle?.status}</TableCell>
                   <TableCell>
                     {<EditAndDelBtns id={vehicle?.id} onDelete={onDelete} />}
                   </TableCell>
@@ -95,8 +101,7 @@ const CarTable = ({ data, isLoading, error, open, handleClose, onDelete }) => {
           </TableBody>
         </Table>
       </TableContainer>
-
-      <AddCarModal open={open} handleClose={handleClose} />
+      <CreateVehicleModal open={open} setOpen={setOpen} />
     </Box>
   );
 };
