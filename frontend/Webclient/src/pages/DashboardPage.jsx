@@ -18,7 +18,7 @@ const DashboardPage = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
+  const fetchCars = () => {
     setIsLoading(true);
     api
       .get('/car')
@@ -30,6 +30,10 @@ const DashboardPage = () => {
         setError('Error fetching Data...');
       })
       .finally(() => setIsLoading(false));
+  };
+
+  useEffect(() => {
+    fetchCars();
   }, []);
 
   const handleBack = () => {
@@ -92,6 +96,7 @@ const DashboardPage = () => {
         handleClose={handleClose}
         setOpen={setOpen}
         onDelete={handleDelete}
+        refreshCarList={fetchCars}
       />
     </div>
   );

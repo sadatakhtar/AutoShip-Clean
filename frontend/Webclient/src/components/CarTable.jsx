@@ -24,6 +24,7 @@ const CarTable = ({
   setOpen,
   handleClose,
   onDelete,
+  refreshCarList,
 }) => {
   // Handle loading state first
   if (isLoading) {
@@ -101,7 +102,11 @@ const CarTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <CreateVehicleModal open={open} setOpen={setOpen} />
+      <CreateVehicleModal
+        open={open}
+        setOpen={setOpen}
+        onSuccess={refreshCarList}
+      />
     </Box>
   );
 };
@@ -114,6 +119,7 @@ CarTable.propTypes = {
   setOpen: PropTypes.func.isRequired,
   handleClose: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
+  refreshCars: PropTypes.func.isRequired,
 };
 
 export default CarTable;
