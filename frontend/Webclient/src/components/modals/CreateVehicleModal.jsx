@@ -9,7 +9,6 @@ import {
   MenuItem,
   Grid,
   Alert,
-  Typography,
   Box,
 } from '@mui/material';
 import api from '../../api/axios';
@@ -89,37 +88,6 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
       setError(msg);
     }
   };
-
-  // const handleSubmit = async () => {
-  //   setError('');
-  //   setSuccess('');
-
-  //   try {
-  //     await api.post('/newcar', {
-  //       VIN: form.vin,
-  //       Make: form.make,
-  //       Model: form.model,
-  //       ManufactureDate: form.manufactureDate,
-  //       Status: form.status,
-  //       IVAStatus: form.ivaStatus,
-  //       MOTStatus: form.motStatus,
-  //       V55Status: form.v55Status,
-  //       Documents: [],
-  //     });
-
-  //     setSuccess('Vehicle created successfully');
-  //     setTimeout(() => {
-  //       setOpen(false);
-  //       onSuccess(); // refreshes dashboard car list
-  //     }, 1200);
-  //   } catch (err) {
-  //     const msg =
-  //       err?.response?.data?.message ||
-  //       err?.response?.data ||
-  //       'Error creating vehicle';
-  //     setError(msg);
-  //   }
-  // };
 
   const handleClose = () => {
     setError('');
