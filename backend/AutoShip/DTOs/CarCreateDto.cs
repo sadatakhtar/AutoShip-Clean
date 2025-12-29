@@ -11,7 +11,8 @@ namespace AutoShip.DTOs
         public string? Model { get; set; }
         public DateTime ManufactureDate { get; set; }
         public string? Status { get; set; }
-        public List<DocumentDto>? Documents { get; set; }
+        public List<IFormFile>? Documents { get; set; }
+        public string? DocumentType { get; set; }
         public string? IVAStatus { get; set; }
         public string? MOTStatus { get; set; }
         public string? V55Status { get; set; }
