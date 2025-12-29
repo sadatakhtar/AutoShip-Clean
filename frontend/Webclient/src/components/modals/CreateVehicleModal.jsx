@@ -61,7 +61,7 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
       formData.append('IVAStatus', form.ivaStatus);
       formData.append('MOTStatus', form.motStatus);
       formData.append('V55Status', form.v55Status);
-      formData.append("DocumentType", form.documentType || "");
+      formData.append('DocumentType', form.documentType || '');
 
       // Append files
       if (form.documents) {
@@ -293,17 +293,13 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
           </Grid>
 
           <Grid item xs={12}>
-            <Typography variant="body2" sx={{ mt: 1 }}>
-              Upload documents
-              <br />
-              <input
-                type="file"
-                multiple
-                onChange={(e) =>
-                  setForm({ ...form, documents: e.target.files })
-                }
-              />
-            </Typography>
+            <label htmlFor="file-upload">Upload documents</label>
+            <input
+              id="file-upload"
+              type="file"
+              multiple
+              onChange={(e) => setForm({ ...form, documents: e.target.files })}
+            />
           </Grid>
         </Grid>
       </DialogContent>
