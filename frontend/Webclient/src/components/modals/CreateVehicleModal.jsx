@@ -45,27 +45,41 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // TESTing new handleSubmit - delete other one if works
   const handleSubmit = async () => {
     setError('');
     setSuccess('');
 
     try {
-      await api.post('/newcar', {
-        VIN: form.vin,
-        Make: form.make,
-        Model: form.model,
-        ManufactureDate: form.manufactureDate,
-        Status: form.status,
-        IVAStatus: form.ivaStatus,
-        MOTStatus: form.motStatus,
-        V55Status: form.v55Status,
-        Documents: [],
+      const formData = new FormData();
+
+      formData.append('VIN', form.vin);
+      formData.append('Make', form.make);
+      formData.append('Model', form.model);
+      formData.append('ManufactureDate', form.manufactureDate);
+      formData.append('Status', form.status);
+      formData.append('IVAStatus', form.ivaStatus);
+      formData.append('MOTStatus', form.motStatus);
+      formData.append('V55Status', form.v55Status);
+      formData.append("DocumentType", form.documentType || "");
+
+      // Append files
+      if (form.documents) {
+        for (let i = 0; i < form.documents.length; i++) {
+          formData.append('Documents', form.documents[i]);
+        }
+      }
+
+      await api.post('/newcar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       setSuccess('Vehicle created successfully');
       setTimeout(() => {
         setOpen(false);
-        onSuccess(); // refreshes dashboard car list
+        onSuccess();
       }, 1200);
     } catch (err) {
       const msg =
@@ -75,6 +89,37 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
       setError(msg);
     }
   };
+
+  // const handleSubmit = async () => {
+  //   setError('');
+  //   setSuccess('');
+
+  //   try {
+  //     await api.post('/newcar', {
+  //       VIN: form.vin,
+  //       Make: form.make,
+  //       Model: form.model,
+  //       ManufactureDate: form.manufactureDate,
+  //       Status: form.status,
+  //       IVAStatus: form.ivaStatus,
+  //       MOTStatus: form.motStatus,
+  //       V55Status: form.v55Status,
+  //       Documents: [],
+  //     });
+
+  //     setSuccess('Vehicle created successfully');
+  //     setTimeout(() => {
+  //       setOpen(false);
+  //       onSuccess(); // refreshes dashboard car list
+  //     }, 1200);
+  //   } catch (err) {
+  //     const msg =
+  //       err?.response?.data?.message ||
+  //       err?.response?.data ||
+  //       'Error creating vehicle';
+  //     setError(msg);
+  //   }
+  // };
 
   const handleClose = () => {
     setError('');
@@ -223,10 +268,41 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
               ))}
             </TextField>
           </Grid>
+          <Grid item xs={12}>
+            <TextField
+              select
+              label="Document Type"
+              name="documentType"
+              fullWidth
+              sx={{ minWidth: 260 }}
+              value={form.documentType || ''}
+              onChange={(e) =>
+                setForm({ ...form, documentType: e.target.value })
+              }
+            >
+              <MenuItem value="Nova">Nova</MenuItem>
+              <MenuItem value="V5">V5</MenuItem>
+              <MenuItem value="MOT">MOT</MenuItem>
+              <MenuItem value="IVA">IVA</MenuItem>
+              <MenuItem value="Invoice">Invoice</MenuItem>
+              <MenuItem value="EC">Export Certificate</MenuItem>
+              <MenuItem value="BOL">Bill of Landing</MenuItem>
+              <MenuItem value="CI">Customs Invoice</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
+            </TextField>
+          </Grid>
 
           <Grid item xs={12}>
             <Typography variant="body2" sx={{ mt: 1 }}>
-              Document upload coming soon…
+              Upload documents
+              <br />
+              <input
+                type="file"
+                multiple
+                onChange={(e) =>
+                  setForm({ ...form, documents: e.target.files })
+                }
+              />
             </Typography>
           </Grid>
         </Grid>
