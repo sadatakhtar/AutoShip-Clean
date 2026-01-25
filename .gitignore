@@ -24,14 +24,16 @@ obj/
 node_modules/
 dist/
 build/
-.env
+
 
 # =========================
 # Docker related
 # =========================
 # Ignore container-specific files, but not docker-compose.yml
 docker-compose.override.yml
-*.env         # local env files with secrets (e.g., JWT keys, DB passwords)
+.env
+.env.*
+
 
 # =========================
 # User files / OS
