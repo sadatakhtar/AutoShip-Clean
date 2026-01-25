@@ -32,7 +32,8 @@ build/
 # Ignore container-specific files, but not docker-compose.yml
 docker-compose.override.yml
 .env
-.env.*
+.env.local
+.env.production
 
 
 # =========================
