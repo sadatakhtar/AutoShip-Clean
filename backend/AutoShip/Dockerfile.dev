@@ -1,0 +1,16 @@
+# Use .NET 9 SDK for building
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+WORKDIR /app
+
+# Copy csproj and restore dependencies
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else
+COPY . ./
+
+# Expose port for the backend
+EXPOSE 5000
+
+# Use dotnet watch for hot reload in development
+CMD ["dotnet", "watch", "run", "--urls=http://+:5000"]

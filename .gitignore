@@ -1,0 +1,52 @@
+# =========================
+# .NET / C# related
+# =========================
+bin/
+obj/
+*.user
+*.suo
+*.vs/
+*.dll
+*.pdb
+*.exe
+*.log
+
+# =========================
+# Visual Studio / Rider / IDE stuff
+# =========================
+.vscode/
+.idea/
+*.dotSettings.user
+
+# =========================
+# Node / Frontend (if you have WebClient)
+# =========================
+node_modules/
+dist/
+build/
+
+# =========================
+# Docker related
+# =========================
+# Ignore container-specific files, but not docker-compose.yml
+docker-compose.override.yml
+*.env         # local env files with secrets (e.g., JWT keys, DB passwords)
+
+# =========================
+# User files / OS
+# =========================
+*.DS_Store
+Thumbs.db
+
+# =========================
+# Logs and temp files
+# =========================
+*.log
+tmp/
+temp/
+
+# =========================
+# Database / Volumes
+# =========================
+# DO NOT commit actual DB files from volumes!
+# Named volumes like 'autoship_sql_data' are not in repo, so no need to ignore anything

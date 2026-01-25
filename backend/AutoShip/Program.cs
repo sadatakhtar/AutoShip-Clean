@@ -11,14 +11,31 @@ using Microsoft.IdentityModel.Tokens;
 using Scalar.AspNetCore;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
+// Listen on all network interfaces
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(5000); // match your container port
+});
+
+// Add health checks
+builder.Services.AddHealthChecks();
+
+// Optional: you can also add DB check
+builder.Services.AddHealthChecks()
+    .AddSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        name: "MSSQL"
+    );
+
+
+// Configure services
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     Console.WriteLine(">>> ApiBehaviorOptions configured <<<");
 });
-// Add services to the container.
+
 builder.Services.AddMapster();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers()
@@ -27,37 +44,31 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-//builder.Services.AddOpenApi();
+
 builder.Services.AddOpenApi("v1", options =>
 {
     options.AddDocumentTransformer<BearerSecurityTransformer>();
 });
 
+// DB Context
+builder.Services.AddDbContext<ImportDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Build the app.
-builder.Services.AddDbContext<ImportDbContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
-
-// Allow Cors for development
+// CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
+        policy => policy.WithOrigins("http://localhost:5173")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
 });
 
-
-// Access configuration values
-var jwtKey = builder.Configuration["Jwt:Key"];
+// JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"] 
+             ?? throw new Exception("JWT Key missing");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
-// Jwt
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -69,50 +80,62 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = jwtIssuer,
             ValidAudience = jwtAudience,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(jwtKey))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
     });
 
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<EmailService>();
 
-
-
-
 var app = builder.Build();
 
-// Seed initial admin user if none exists
+// --- DATABASE MIGRATIONS + SEEDING ---
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ImportDbContext>();
 
-    if (!context.Users.Any(u => u.Username == "admin"))
+    try
     {
-        var hasher = new PasswordHasher<User>();
+        Console.WriteLine(">>> Applying database migrations...");
+        context.Database.Migrate();
 
-        var admin = new User
+        // Seed default admin user if none exists
+        if (!context.Users.Any(u => u.Username == "admin1"))
         {
-            Username = "admin",
-            Role = "Admin",
-            PasswordHash = hasher.HashPassword(null, "password")
-        };
+            Console.WriteLine(">>> Seeding default admin1 user...");
+            var hasher = new PasswordHasher<User>();
+            var admin = new User
+            {
+                Username = "admin1",
+                Email = "admin@example.com",
+                Role = "Admin",
+                PasswordHash = hasher.HashPassword(null, "admin123") // default password
+            };
 
-        context.Users.Add(admin);
-        context.SaveChanges();
+            context.Users.Add(admin);
+            context.SaveChanges();
+
+            Console.WriteLine("✅ Default admin user created: admin1 / admin123");
+        }
+        else
+        {
+            Console.WriteLine("✅ Admin user already exists, skipping seeding.");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($">>> Error seeding database: {ex.Message}");
     }
 }
 
 
-
-// Configure the HTTP request pipeline.
+// HTTP pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-else 
+else
 {
-    // Serve React (Vite build output) in production
     app.UseDefaultFiles();
     app.UseStaticFiles(new StaticFileOptions
     {
@@ -120,20 +143,18 @@ else
             Path.Combine(Directory.GetCurrentDirectory(), "WebClient", "dist"))
     });
 
-    // Fallback to index.html (SPA routing)
     app.MapFallbackToFile("index.html");
 }
 
-//app.MapScalarApiReference();
-app.MapScalarApiReference(options =>
-{
-    options.WithPersistentAuthentication(); 
-});
+app.MapScalarApiReference(options => options.WithPersistentAuthentication());
+
+// Map health check endpoint
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.UseCors("AllowReactApp");
 app.MapControllers();
 app.Run();
+
