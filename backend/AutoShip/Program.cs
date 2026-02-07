@@ -1,6 +1,7 @@
 using AutoShip.Configuration;
 using AutoShip.Data;
 using AutoShip.Models;
+using AutoShip.Services;
 using Mapster;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +22,15 @@ builder.WebHost.ConfigureKestrel(options =>
 
 // Add health checks
 builder.Services.AddHealthChecks();
+
+// Read connection string
+var azureStorageConnectionString = builder.Configuration["AzureStorage:ConnectionString"];
+
+
+
+// Add Blob storage
+builder.Services.AddScoped<BlobStorageService>();
+
 
 // Optional: you can also add DB check
 builder.Services.AddHealthChecks()

@@ -34,6 +34,8 @@ services:
       EmailSettings__Username: ${EMAIL_USERNAME}
       EmailSettings__Password: ${EMAIL_PASSWORD}
       ConnectionStrings__DefaultConnection: "Server=autoship-sql,1433;Database=AutoShipDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+      AzureBlobStorage__ConnectionString: ${AzureBlobStorage__ConnectionString}
+      AzureBlobStorage__ContainerName: uploads
       DOTNET_ENVIRONMENT: Development
 
     ports:
