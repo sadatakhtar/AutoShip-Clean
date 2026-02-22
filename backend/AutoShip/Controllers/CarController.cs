@@ -1,6 +1,7 @@
 ﻿using AutoShip.Data;
 using AutoShip.DTOs;
 using AutoShip.Models;
+using AutoShip.Services;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,13 @@ namespace AutoShip.Controllers
     public class CarController : ControllerBase
     {
         private readonly ImportDbContext _context;
-        public CarController(ImportDbContext context)
+        private readonly BlobStorageService _blobStorage;
+
+
+        public CarController(ImportDbContext context, BlobStorageService blobStorage)
         {
             _context = context;
+            _blobStorage = blobStorage;
         }
 
         // Add methods for CRUD operations here
@@ -81,18 +86,32 @@ namespace AutoShip.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult<Car>> DeleteCar(int id)
         {
-            var car = await _context.Cars.FindAsync(id);
+            var car = await _context.Cars
+                .Include(c => c.Documents)
+                .FirstOrDefaultAsync(c => c.Id == id);
+
             if (car is null)
                 return NotFound();
+
+            foreach (var doc in car.Documents)
+            {
+                if (!string.IsNullOrEmpty(doc.FilePath))
+                    await _blobStorage.DeleteFileAsync(doc.FilePath);
+
+                _context.Documents.Remove(doc);
+            }
+
             _context.Cars.Remove(car);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+
+
 
 
     }
