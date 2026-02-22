@@ -23,7 +23,7 @@ namespace AutoShip.Models
         public string? IVAStatus { get; set; }
         public string? MOTStatus { get; set; }
         public string? V55Status { get; set; }
-
+        public string? ImageBlobName { get; set; }
         public ICollection<Documents> Documents { get; set; } = new List<Documents>();
         public CustomsClearance? Clearance { get; set; }
         public RegistrationProcess? Registration { get; set; }

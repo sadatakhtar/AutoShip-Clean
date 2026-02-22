@@ -6,13 +6,14 @@ namespace AutoShip.Services
     public class BlobStorageService
     {
         private readonly BlobContainerClient _container;
+        private readonly string _containerName;
 
         public BlobStorageService(IConfiguration config)
         {
             var connectionString = config["AzureBlobStorage:ConnectionString"];
-            var containerName = config["AzureBlobStorage:ContainerName"] ?? "uploads";
+            _containerName = config["AzureBlobStorage:ContainerName"] ?? "uploads";
 
-            _container = new BlobContainerClient(connectionString, containerName);
+            _container = new BlobContainerClient(connectionString, _containerName);
         }
 
         public async Task<string> UploadAsync(IFormFile file, string carVin)
@@ -25,7 +26,14 @@ namespace AutoShip.Services
                 new BlobHttpHeaders { ContentType = file.ContentType }
             );
 
-            return blobClient.Uri.ToString();
+               return blobName;
+
+        }
+
+        public async Task DeleteFileAsync(string blobName)
+        {
+            var blobClient = _container.GetBlobClient(blobName);
+            await blobClient.DeleteIfExistsAsync();
         }
     }
 }
