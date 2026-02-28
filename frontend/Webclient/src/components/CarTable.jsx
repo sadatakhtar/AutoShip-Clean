@@ -15,6 +15,7 @@ import { getRowStyle } from '../utils/carTableHelpers';
 import Loading from './Loading';
 import PropTypes from 'prop-types';
 import CreateVehicleModal from './modals/CreateVehicleModal';
+import EditModal from './modals/EditModal';
 
 const CarTable = ({
   data,
@@ -26,6 +27,14 @@ const CarTable = ({
   onDelete,
   refreshCarList,
 }) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [selectedVehicle, setSelectedVehicle] = useState(null);
+
+  const handleEdit = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setEditOpen(true);
+  };
+
   // Handle loading state first
   if (isLoading) {
     return <Loading message="Loading data..." />;
@@ -88,7 +97,14 @@ const CarTable = ({
                   <TableCell>{vehicle?.motStatus}</TableCell>
                   <TableCell>{vehicle?.status}</TableCell>
                   <TableCell>
-                    {<EditAndDelBtns id={vehicle?.id} onDelete={onDelete} />}
+                    {
+                      <EditAndDelBtns
+                        id={vehicle?.id}
+                        onDelete={onDelete}
+                        vehicle={vehicle}
+                        onEdit={handleEdit}
+                      />
+                    }
                   </TableCell>
                 </TableRow>
               ))
@@ -106,6 +122,29 @@ const CarTable = ({
         open={open}
         setOpen={setOpen}
         onSuccess={refreshCarList}
+      />
+
+      <EditModal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        vehicle={selectedVehicle}
+        onConfirm={async (id, updatedData) => {
+          try {
+            await fetch(`http://localhost:5065/api/Car/${id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${localStorage.getItem('token')}`,
+              },
+              body: JSON.stringify(updatedData),
+            });
+
+            refreshCarList(); // reload table
+            setEditOpen(false); // close modal
+          } catch (err) {
+            console.error('Update failed:', err);
+          }
+        }}
       />
     </Box>
   );

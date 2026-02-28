@@ -64,7 +64,7 @@ namespace AutoShip.Controllers
             return Ok(car.Id);
         }
 
-        [Authorize]
+        // [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<Car>> UpdateCar(int id, Car updatedCar)
         {
