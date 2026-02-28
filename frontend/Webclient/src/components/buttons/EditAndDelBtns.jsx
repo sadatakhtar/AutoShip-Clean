@@ -18,12 +18,7 @@ const MyButton = styled.button`
 
 const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle }) => {
   const [open, setOpen] = useState(false);
-  //  const [openEditModal, setOpenEditModal] = useState(false);
-
-  // const handleEditBtn = () => {
-  //   setOpenEditModal(true);
-  //   console.log('Edit btn clicked!!!');
-  // };
+ 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div style={{ padding: '5px' }}>
