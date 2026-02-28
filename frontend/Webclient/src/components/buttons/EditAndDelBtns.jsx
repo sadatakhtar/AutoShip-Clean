@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import DeleteModal from '../modals/DeleteModal';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const MyButton = styled.button`
   background-color: red;
@@ -16,13 +16,21 @@ const MyButton = styled.button`
   }
 `;
 
-const EditAndDelBtns = ({ id, onDelete }) => {
+const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle }) => {
   const [open, setOpen] = useState(false);
+  //  const [openEditModal, setOpenEditModal] = useState(false);
 
+  // const handleEditBtn = () => {
+  //   setOpenEditModal(true);
+  //   console.log('Edit btn clicked!!!');
+  // };
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div style={{ padding: '5px' }}>
-        <MyButton style={{ backgroundColor: 'green' }} onClick={() => {}}>
+        <MyButton
+          style={{ backgroundColor: 'green' }}
+          onClick={() => onEdit(vehicle)}
+        >
           Edit
         </MyButton>
       </div>
@@ -33,7 +41,7 @@ const EditAndDelBtns = ({ id, onDelete }) => {
       </div>
       <DeleteModal
         open={open}
-        carId={id}
+        carId={vehicle?.id}
         onClose={() => setOpen(false)}
         onConfirm={(id) => {
           onDelete(id);
