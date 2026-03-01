@@ -16,9 +16,9 @@ const MyButton = styled.button`
   }
 `;
 
-const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle }) => {
+const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle, onUpload }) => {
   const [open, setOpen] = useState(false);
- 
+
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <div style={{ padding: '5px' }}>
@@ -32,6 +32,14 @@ const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle }) => {
       <div style={{ padding: '5px' }}>
         <MyButton className="myButton" onClick={() => setOpen(true)}>
           Delete
+        </MyButton>
+      </div>
+      <div style={{ padding: '5px' }}>
+        <MyButton
+          style={{ backgroundColor: 'blue' }}
+          onClick={() => onUpload(vehicle)}
+        >
+          Upload Docs
         </MyButton>
       </div>
       <DeleteModal

@@ -16,6 +16,7 @@ import Loading from './Loading';
 import PropTypes from 'prop-types';
 import CreateVehicleModal from './modals/CreateVehicleModal';
 import EditModal from './modals/EditModal';
+import UploadDocumentsModal from './modals/UploadDocumentsModal';
 
 const CarTable = ({
   data,
@@ -29,6 +30,13 @@ const CarTable = ({
 }) => {
   const [editOpen, setEditOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [uploadOpen, setUploadOpen] = useState(false);
+  const [uploadVehicle, setUploadVehicle] = useState(null);
+
+  const handleUploadDocs = (vehicle) => {
+    setUploadVehicle(vehicle);
+    setUploadOpen(true);
+  };
 
   const handleEdit = (vehicle) => {
     setSelectedVehicle(vehicle);
@@ -103,6 +111,7 @@ const CarTable = ({
                         onDelete={onDelete}
                         vehicle={vehicle}
                         onEdit={handleEdit}
+                        onUpload={handleUploadDocs}
                       />
                     }
                   </TableCell>
@@ -145,6 +154,12 @@ const CarTable = ({
             console.error('Update failed:', err);
           }
         }}
+      />
+      <UploadDocumentsModal
+        open={uploadOpen}
+        onClose={() => setUploadOpen(false)}
+        carId={uploadVehicle?.id}
+        onUploaded={refreshCarList}
       />
     </Box>
   );

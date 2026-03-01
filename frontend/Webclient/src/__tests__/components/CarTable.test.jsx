@@ -3,6 +3,11 @@ import { render, screen } from "@testing-library/react";
 import CarTable from "../../../src/components/CarTable";
 import "@testing-library/jest-dom";
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
+}));
+
 describe("CarTable Component", () => {
   test("shows Loading component when isLoading is true", () => {
     render(<CarTable data={[]} isLoading={true} error={null} />);
