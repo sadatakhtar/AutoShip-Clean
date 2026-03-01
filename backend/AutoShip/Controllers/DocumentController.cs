@@ -134,10 +134,15 @@ namespace AutoShip.Controllers
             if (doc is null)
                 return NotFound();
 
-            // Build full blob URL
-            var url = _blobStorage.GetBlobUrl(doc.FilePath);
+            // Build full blob URL with SAS
+            var sasUrl = _blobStorage.GetBlobSasUrl(doc.FilePath);
 
-            return Ok(new { url });
+            if (sasUrl == null)
+                return NotFound("Blob not found");
+
+            return Ok(new { url = sasUrl });
+
+
         }
     }
 }
