@@ -1,5 +1,7 @@
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Azure.Storage.Sas;
+
 
 namespace AutoShip.Services
 {
@@ -54,5 +56,30 @@ namespace AutoShip.Services
             var download = await blobClient.DownloadAsync();
             return download.Value.Content;
         }
+
+       public string GetBlobSasUrl(string blobName, int expiryMinutes = 10)
+        {
+            var blobClient = _container.GetBlobClient(blobName);
+
+            // Ensure the blob exists
+            if (!blobClient.Exists())
+                return null;
+
+            var sasBuilder = new BlobSasBuilder
+            {   
+                BlobContainerName = _containerName,
+                BlobName = blobName,
+                Resource = "b",
+                ExpiresOn = DateTime.UtcNow.AddMinutes(expiryMinutes)
+            };
+
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            var sasUri = blobClient.GenerateSasUri(sasBuilder);
+
+            return sasUri.ToString();
+        }
+
+
     }
 }
