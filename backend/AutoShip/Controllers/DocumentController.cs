@@ -21,20 +21,38 @@ namespace AutoShip.Controllers
             _blobStorage = blobStorage;
         }
 
+        // ----------------------------------------------------
+        // GET SINGLE DOCUMENT BY DOCUMENT ID
+        // ----------------------------------------------------
         [Authorize]
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetDocumentById(int id)
+        [HttpGet("{docId}")]
+        public async Task<IActionResult> GetDocumentById(int docId)
         {
-            var doc = await _context.Documents.FindAsync(id);
+            var doc = await _context.Documents.FindAsync(docId);
             if (doc is null)
                 return NotFound();
 
             return Ok(doc);
         }
 
-        // -------------------------
-        // UPDATED UPLOAD ENDPOINT
-        // -------------------------
+        // ----------------------------------------------------
+        // GET ALL DOCUMENTS FOR A CAR
+        // ----------------------------------------------------
+        [Authorize]
+        [HttpGet("car/{carId}")]
+        public async Task<IActionResult> GetDocumentsForCar(int carId)
+        {
+            var docs = await _context.Documents
+                .Where(d => d.CarId == carId)
+                .OrderByDescending(d => d.ReceivedDate)
+                .ToListAsync();
+
+            return Ok(docs);
+        }
+
+        // ----------------------------------------------------
+        // UPLOAD DOCUMENT (ONE FILE PER REQUEST)
+        // ----------------------------------------------------
         [Authorize]
         [HttpPost("{carId}")]
         public async Task<IActionResult> AddDocument(int carId, IFormFile file, [FromForm] DocumentDto dto)
@@ -46,13 +64,13 @@ namespace AutoShip.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded");
 
-            // Upload to Azure Blob Storage
             var blobName = await _blobStorage.UploadAsync(file, car.VIN);
 
             var doc = new Documents
             {
                 Type = dto.Type,
-                FilePath = blobName, // store blob name, not URL
+                FileName = file.FileName,
+                FilePath = blobName,
                 ReceivedDate = dto.ReceivedDate,
                 CarId = carId
             };
@@ -63,8 +81,11 @@ namespace AutoShip.Controllers
             return Ok(doc);
         }
 
+        // ----------------------------------------------------
+        // UPDATE DOCUMENT METADATA
+        // ----------------------------------------------------
         [Authorize]
-        [HttpPut("{docId}")]
+        [HttpPut("{carId}/{docId}")]
         public async Task<IActionResult> UpdateDocument(int carId, int docId, DocumentDto dto)
         {
             var doc = await _context.Documents
@@ -80,11 +101,11 @@ namespace AutoShip.Controllers
             return Ok(doc);
         }
 
-        // -------------------------
-        // UPDATED DELETE ENDPOINT
-        // -------------------------
+        // ----------------------------------------------------
+        // DELETE DOCUMENT
+        // ----------------------------------------------------
         [Authorize]
-        [HttpDelete("{docId}")]
+        [HttpDelete("{carId}/{docId}")]
         public async Task<IActionResult> DeleteDocumentById(int carId, int docId)
         {
             var doc = await _context.Documents
@@ -93,16 +114,30 @@ namespace AutoShip.Controllers
             if (doc is null)
                 return NotFound();
 
-            // Delete blob from Azure
             if (!string.IsNullOrEmpty(doc.FilePath))
-            {
                 await _blobStorage.DeleteFileAsync(doc.FilePath);
-            }
 
             _context.Documents.Remove(doc);
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // ----------------------------------------------------
+        // DOWNLOAD DOCUMENT (RETURNS FULL BLOB URL)
+        // ----------------------------------------------------
+        [Authorize]
+        [HttpGet("download/{docId}")]
+        public async Task<IActionResult> DownloadDocument(int docId)
+        {
+            var doc = await _context.Documents.FindAsync(docId);
+            if (doc is null)
+                return NotFound();
+
+            // Build full blob URL
+            var url = _blobStorage.GetBlobUrl(doc.FilePath);
+
+            return Ok(new { url });
         }
     }
 }

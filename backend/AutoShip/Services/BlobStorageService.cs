@@ -26,14 +26,33 @@ namespace AutoShip.Services
                 new BlobHttpHeaders { ContentType = file.ContentType }
             );
 
-               return blobName;
-
+            return blobName;
         }
 
         public async Task DeleteFileAsync(string blobName)
         {
             var blobClient = _container.GetBlobClient(blobName);
             await blobClient.DeleteIfExistsAsync();
+        }
+
+        // ----------------------------------------------------
+        // NEW: Return full public blob URL
+        // ----------------------------------------------------
+        public string GetBlobUrl(string blobName)
+        {
+            // Example output:
+            // https://youraccount.blob.core.windows.net/uploads/carvin/file.pdf
+            return $"{_container.Uri}/{blobName}";
+        }
+
+        // ----------------------------------------------------
+        // OPTIONAL: Stream file directly (if you want streaming)
+        // ----------------------------------------------------
+        public async Task<Stream> DownloadAsync(string blobName)
+        {
+            var blobClient = _container.GetBlobClient(blobName);
+            var download = await blobClient.DownloadAsync();
+            return download.Value.Content;
         }
     }
 }
