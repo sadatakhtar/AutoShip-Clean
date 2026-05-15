@@ -1,3 +1,87 @@
+# version: '3.9'
+
+# services:
+#   # ---------- SQL Server ----------
+#   autoship-sql:
+#     build:
+#       context: ./docker/sql
+#     container_name: autoship-sql
+#     environment:
+#       SA_PASSWORD: ${SA_PASSWORD}  # make sure this meets SQL Server requirements
+#       ACCEPT_EULA: "Y"
+#       MSSQL_PID: "Developer"
+#     ports:
+#       - "1433:1433"  # map SQL Server port
+#     volumes:
+#       - autoship_sql_data:/var/opt/mssql
+#     networks:
+#       - autoship-network
+#     healthcheck:
+#       test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'SELECT 1' || exit 1"]
+#       interval: 10s
+#       retries: 10
+
+#   # ---------- Backend (.NET) ----------
+#   autoship-backend:
+#     build:
+#       context: ./backend/AutoShip
+#       dockerfile: Dockerfile.dev
+#     container_name: autoship-backend
+#     env_file:
+#       - .env
+#     environment:
+#       Jwt__Key: ${JWT_KEY}
+#       EmailSettings__Username: ${EMAIL_USERNAME}
+#       EmailSettings__Password: ${EMAIL_PASSWORD}
+#       ConnectionStrings__DefaultConnection: "Server=autoship-sql,1433;Database=AutoShipDb;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+#       AzureBlobStorage__ConnectionString: ${AzureBlobStorage__ConnectionString}
+#       AzureBlobStorage__ContainerName: uploads
+#       DOTNET_ENVIRONMENT: Development
+
+#     ports:
+#       - "5065:5000"   # backend API port
+#     depends_on:
+#       autoship-sql:
+#         condition: service_healthy
+#     healthcheck:
+#       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+#       interval: 5s
+#       timeout: 2s
+#       retries: 5
+#       start_period: 15s
+#     networks:
+#       - autoship-network
+#     volumes:
+#       - ./backend/AutoShip:/app
+#     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
+
+#   # ---------- Frontend (Vite) ----------
+#   autoship-frontend:
+#     build:
+#       context: ./frontend/Webclient
+#       dockerfile: Dockerfile.dev
+#     container_name: autoship-frontend
+#     ports:
+#       - "5173:5173"  # expose Vite frontend
+#     depends_on:
+#       autoship-backend:
+#         condition: service_healthy
+#     networks:
+#       - autoship-network
+#     volumes:
+#       - ./frontend/Webclient:/app
+#       - /app/node_modules 
+#     command: ["npm", "run", "dev", "--", "--host"]  # <-- important: bind to 0.0.0.0
+
+# # ---------- Volumes ----------
+# volumes:
+#   autoship_sql_data:
+
+# # ---------- Network ----------
+# networks:
+#   autoship-network:
+#     driver: bridge
+
 version: '3.9'
 
 services:
@@ -7,11 +91,11 @@ services:
       context: ./docker/sql
     container_name: autoship-sql
     environment:
-      SA_PASSWORD: ${SA_PASSWORD}  # make sure this meets SQL Server requirements
+      SA_PASSWORD: ${SA_PASSWORD}
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
     ports:
-      - "1433:1433"  # map SQL Server port
+      - "1433:1433"
     volumes:
       - autoship_sql_data:/var/opt/mssql
     networks:
@@ -20,6 +104,7 @@ services:
       test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -U sa -P ${SA_PASSWORD} -Q 'SELECT 1' || exit 1"]
       interval: 10s
       retries: 10
+      timeout: 5s
 
   # ---------- Backend (.NET) ----------
   autoship-backend:
@@ -30,16 +115,19 @@ services:
     env_file:
       - .env
     environment:
+      DOTNET_ENVIRONMENT: Development
       Jwt__Key: ${JWT_KEY}
       EmailSettings__Username: ${EMAIL_USERNAME}
       EmailSettings__Password: ${EMAIL_PASSWORD}
-      ConnectionStrings__DefaultConnection: "Server=autoship-sql,1433;Database=AutoShipDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+
+      # FIXED: Correct SQL Server hostname for Docker
+      ConnectionStrings__DefaultConnection: "Server=autoship-sql,1433;Database=AutoShipDb;User=sa;Password=${SA_PASSWORD};TrustServerCertificate=True;"
+
       AzureBlobStorage__ConnectionString: ${AzureBlobStorage__ConnectionString}
       AzureBlobStorage__ContainerName: uploads
-      DOTNET_ENVIRONMENT: Development
 
     ports:
-      - "5065:5000"   # backend API port
+      - "5065:5000"
     depends_on:
       autoship-sql:
         condition: service_healthy
@@ -51,8 +139,12 @@ services:
       start_period: 15s
     networks:
       - autoship-network
+
+    # FIXED: Hot reload works, but does NOT break healthchecks
     volumes:
       - ./backend/AutoShip:/app
+      - /app/bin
+      - /app/obj
     command: ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
 
   # ---------- Frontend (Vite) ----------
@@ -62,7 +154,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: autoship-frontend
     ports:
-      - "5173:5173"  # expose Vite frontend
+      - "5173:5173"
     depends_on:
       autoship-backend:
         condition: service_healthy
@@ -70,8 +162,8 @@ services:
       - autoship-network
     volumes:
       - ./frontend/Webclient:/app
-      - /app/node_modules 
-    command: ["npm", "run", "dev", "--", "--host"]  # <-- important: bind to 0.0.0.0
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host"]
 
 # ---------- Volumes ----------
 volumes:

@@ -17,35 +17,23 @@ var builder = WebApplication.CreateBuilder(args);
 // Listen on all network interfaces
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenAnyIP(5000); // match your container port
+    options.ListenAnyIP(5000);
 });
 
-// Add health checks
-builder.Services.AddHealthChecks();
-
-// Read connection string
-var azureStorageConnectionString = builder.Configuration["AzureStorage:ConnectionString"];
-
-
-
-// Add Blob storage
+// Blob storage
 builder.Services.AddScoped<BlobStorageService>();
 
-
-// Optional: you can also add DB check
+// Health checks
 builder.Services.AddHealthChecks()
-    .AddSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        name: "MSSQL"
-    );
+    .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), name: "MSSQL");
 
-
-// Configure services
+// API behaviour
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     Console.WriteLine(">>> ApiBehaviorOptions configured <<<");
 });
 
+// MVC + JSON
 builder.Services.AddMapster();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers()
@@ -55,6 +43,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 
+// OpenAPI
 builder.Services.AddOpenApi("v1", options =>
 {
     options.AddDocumentTransformer<BearerSecurityTransformer>();
@@ -68,14 +57,13 @@ builder.Services.AddDbContext<ImportDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:5173")
+        policy => policy.WithOrigins("http://localhost:5173", "http://localhost:5174","http://autoship-frontend:5173")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
 
 // JWT Authentication
-var jwtKey = builder.Configuration["Jwt:Key"] 
-             ?? throw new Exception("JWT Key missing");
+var jwtKey = builder.Configuration["Jwt:Key"] ?? throw new Exception("JWT Key missing");
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 var jwtAudience = builder.Configuration["Jwt:Audience"];
 
@@ -99,7 +87,8 @@ builder.Services.AddScoped<EmailService>();
 
 var app = builder.Build();
 
-// --- DATABASE MIGRATIONS + SEEDING ---
+
+// --- DATABASE MIGRATIONS + FORCED SEEDING ---
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ImportDbContext>();
@@ -109,28 +98,32 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine(">>> Applying database migrations...");
         context.Database.Migrate();
 
-        // Seed default admin user if none exists
-        if (!context.Users.Any(u => u.Username == "admin1"))
-        {
-            Console.WriteLine(">>> Seeding default admin1 user...");
-            var hasher = new PasswordHasher<User>();
-            var admin = new User
-            {
-                Username = "admin1",
-                Email = "admin@example.com",
-                Role = "Admin",
-                PasswordHash = hasher.HashPassword(null, "admin123") // default password
-            };
+        Console.WriteLine(">>> Forcing seeding of superadmin user...");
 
-            context.Users.Add(admin);
+        var hasher = new PasswordHasher<User>();
+
+        // Remove existing user if exists
+        var existing = context.Users.FirstOrDefault(u => u.Username == "superadmin");
+        if (existing != null)
+        {
+            context.Users.Remove(existing);
             context.SaveChanges();
+        }
 
-            Console.WriteLine("✅ Default admin user created: admin1 / admin123");
-        }
-        else
+        // Create fresh user
+        var super = new User
         {
-            Console.WriteLine("✅ Admin user already exists, skipping seeding.");
-        }
+            Username = "superadmin",
+            Email = "superadmin@example.com",
+            Role = "Admin"
+        };
+
+        super.PasswordHash = hasher.HashPassword(super, "super123");
+
+        context.Users.Add(super);
+        context.SaveChanges();
+
+        Console.WriteLine(">>> Superadmin user created: superadmin / super123");
     }
     catch (Exception ex)
     {
@@ -157,14 +150,18 @@ else
 }
 
 app.MapScalarApiReference(options => options.WithPersistentAuthentication());
-
-// Map health check endpoint
 app.MapHealthChecks("/health");
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseCors("AllowReactApp");
 app.MapControllers();
 app.Run();
+
+
 
