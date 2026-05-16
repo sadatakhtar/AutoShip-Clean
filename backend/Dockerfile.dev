@@ -1,27 +1,3 @@
-# # SDK IMAGE (runtime + build)
-# # ============================
-# FROM mcr.microsoft.com/dotnet/sdk:9.0 AS final
-# WORKDIR /app
-
-# # Copy everything (source code)
-# COPY . .
-# COPY Migrations ./Migrations
-
-# # Install EF tools
-# RUN dotnet tool install --global dotnet-ef
-# ENV PATH="$PATH:/root/.dotnet/tools"
-
-# # Restore & publish
-# RUN dotnet restore
-# RUN dotnet publish -c Release -o /app/publish
-
-# # Expose backend port
-# EXPOSE 5000
-# ENV ASPNETCORE_URLS=http://0.0.0.0:5000
-
-# # Run migrations from SOURCE folder, then run app from PUBLISH folder
-# ENTRYPOINT ["bash", "-c", "cd /app && dotnet ef database update && dotnet /app/publish/AutoShip.dll"]
-
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
@@ -39,11 +15,16 @@ RUN dotnet publish -c Release -o /app/publish
 
 # Runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
+
+# Install curl for healthchecks
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy published output
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "AutoShip.dll"]
+
 
 
