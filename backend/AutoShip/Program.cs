@@ -124,6 +124,44 @@ using (var scope = app.Services.CreateScope())
         context.SaveChanges();
 
         Console.WriteLine(">>> Superadmin user created: superadmin / super123");
+
+        // Seed sample cars if none exist
+        if (!context.Cars.Any())
+        {
+            Console.WriteLine(">>> Seeding sample cars...");
+
+            var car1 = new Car
+            {
+                VIN = "TESTVIN1234567890",
+                Make = "Toyota",
+                Model = "Corolla",
+                ManufactureDate = new DateTime(2020, 5, 1),
+                Status = "Imported",
+                IVAStatus = "Pending",
+                MOTStatus = "Not Required",
+                V55Status = "Not Submitted",
+                ImageBlobName = null
+            };
+
+            var car2 = new Car
+            {
+                VIN = "TESTVIN0987654321",
+                Make = "Honda",
+                Model = "Civic",
+                ManufactureDate = new DateTime(2019, 3, 15),
+                Status = "Registered",
+                IVAStatus = "Completed",
+                MOTStatus = "Passed",
+                V55Status = "Approved",
+                ImageBlobName = null
+            };
+
+            context.Cars.AddRange(car1, car2);
+            context.SaveChanges();
+
+            Console.WriteLine(">>> Sample cars seeded.");
+        }
+
     }
     catch (Exception ex)
     {

@@ -113,6 +113,12 @@ Migrations/
  20260510105107_FixPendingChanges.Designer.cs
  20260516094202_AddInvoiceDecimalPrecision.cs
  20260516094202_AddInvoiceDecimalPrecision.Designer.cs
+ 20260516121630_AddMissingCarStatusColumns.cs
+ 20260516121630_AddMissingCarStatusColumns.Designer.cs
+ 20260516140358_AddMotAndV55StatusColumns.cs
+ 20260516140358_AddMotAndV55StatusColumns.Designer.cs
+ 20260516140917_AddMissingMotAndV55Columns.cs
+ 20260516140917_AddMissingMotAndV55Columns.Designer.cs
  ImportDbContextModelSnapshot.cs
 Models/
  Car.cs
@@ -435,6 +441,44 @@ Services/
  System.Xml.XPath.dll
  System.Xml.XPath.XDocument.dll
  WindowsBase.dll
+<NUGET>/
+ aspnetcore.healthchecks.sqlserver/9.0.0/lib/net8.0/HealthChecks.SqlServer.dll
+ azure.core/1.50.0/lib/net8.0/Azure.Core.dll
+ azure.identity/1.11.4/lib/netstandard2.0/Azure.Identity.dll
+ azure.storage.blobs/12.27.0/lib/net8.0/Azure.Storage.Blobs.dll
+ azure.storage.common/12.26.0/lib/net8.0/Azure.Storage.Common.dll
+ bcrypt.net-next/4.0.3/lib/net6.0/BCrypt.Net-Next.dll
+ bouncycastle.cryptography/2.6.1/lib/net6.0/BouncyCastle.Cryptography.dll
+ mailkit/4.14.1/lib/net8.0/MailKit.dll
+ mapster.core/1.2.1/lib/net7.0/Mapster.Core.dll
+ mapster.dependencyinjection/1.0.1/lib/net7.0/Mapster.DependencyInjection.dll
+ mapster/7.4.0/lib/net7.0/Mapster.dll
+ microsoft.aspnetcore.authentication.jwtbearer/9.0.8/lib/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+ microsoft.aspnetcore.openapi/9.0.8/lib/net9.0/Microsoft.AspNetCore.OpenApi.dll
+ microsoft.bcl.asyncinterfaces/8.0.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll
+ microsoft.data.sqlclient/5.2.2/ref/net8.0/Microsoft.Data.SqlClient.dll
+ microsoft.entityframeworkcore.abstractions/9.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll
+ microsoft.entityframeworkcore.relational/9.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.Relational.dll
+ microsoft.entityframeworkcore.sqlserver/9.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.SqlServer.dll
+ microsoft.entityframeworkcore/9.0.8/lib/net8.0/Microsoft.EntityFrameworkCore.dll
+ microsoft.identity.client.extensions.msal/4.61.3/lib/net6.0/Microsoft.Identity.Client.Extensions.Msal.dll
+ microsoft.identity.client/4.61.3/lib/net6.0/Microsoft.Identity.Client.dll
+ microsoft.identitymodel.abstractions/8.0.1/lib/net9.0/Microsoft.IdentityModel.Abstractions.dll
+ microsoft.identitymodel.jsonwebtokens/8.0.1/lib/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+ microsoft.identitymodel.logging/8.0.1/lib/net9.0/Microsoft.IdentityModel.Logging.dll
+ microsoft.identitymodel.protocols.openidconnect/8.0.1/lib/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+ microsoft.identitymodel.protocols/8.0.1/lib/net9.0/Microsoft.IdentityModel.Protocols.dll
+ microsoft.identitymodel.tokens/8.0.1/lib/net9.0/Microsoft.IdentityModel.Tokens.dll
+ microsoft.openapi/1.6.17/lib/netstandard2.0/Microsoft.OpenApi.dll
+ microsoft.sqlserver.server/1.0.0/lib/netstandard2.0/Microsoft.SqlServer.Server.dll
+ mimekit/4.14.0/lib/net8.0/MimeKit.dll
+ scalar.aspnetcore/2.7.2/lib/net9.0/Scalar.AspNetCore.dll
+ system.clientmodel/1.8.0/lib/net9.0/System.ClientModel.dll
+ system.identitymodel.tokens.jwt/8.0.1/lib/net9.0/System.IdentityModel.Tokens.Jwt.dll
+ system.io.hashing/10.0.1/lib/net9.0/System.IO.Hashing.dll
+ system.memory.data/8.0.1/lib/net8.0/System.Memory.Data.dll
+ system.security.cryptography.pkcs/8.0.1/lib/net8.0/System.Security.Cryptography.Pkcs.dll
+ system.security.cryptography.protecteddata/8.0.0/lib/net8.0/System.Security.Cryptography.ProtectedData.dll
 
 [analyzerReferences]
 <DOTNET>/packs/Microsoft.AspNetCore.App.Ref/9.0.9/analyzers/dotnet/cs/
@@ -462,6 +506,12 @@ Services/
 <DOTNET>/sdk/9.0.305/Sdks/Microsoft.NET.Sdk/analyzers/
  Microsoft.CodeAnalysis.CSharp.NetAnalyzers.dll
  Microsoft.CodeAnalysis.NetAnalyzers.dll
+<NUGET>/microsoft.codeanalysis.analyzers/3.3.4/analyzers/dotnet/cs/
+ Microsoft.CodeAnalysis.Analyzers.dll
+ Microsoft.CodeAnalysis.CSharp.Analyzers.dll
+<NUGET>/
+ microsoft.entityframeworkcore.analyzers/9.0.8/analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll
+ system.clientmodel/1.8.0/analyzers/dotnet/cs/System.ClientModel.SourceGeneration.dll
 
 [analyzerConfigFiles]
 <DOTNET>/sdk/9.0.305/Sdks/Microsoft.NET.Sdk/analyzers/build/config/analysislevel_9_default.globalconfig
