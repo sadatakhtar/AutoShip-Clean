@@ -1,28 +1,24 @@
-# Use .NET 9 SDK for building
-# FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
-# WORKDIR /app
-
-# # Copy csproj and restore dependencies
-# COPY *.csproj ./
-# RUN dotnet restore
-
-# # Copy everything else
-# COPY . ./
-
-# # Expose port for the backend
-# EXPOSE 5000
-
-# # Use dotnet watch for hot reload in development
-# CMD ["dotnet", "run", "--urls=http://+:5000"]
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dev
+# ============================
+# SDK IMAGE (runtime + build)
+# ============================
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS final
 WORKDIR /app
 
+# Copy everything (source code)
 COPY . .
 
+# Install EF tools
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Restore & publish
+RUN dotnet restore
+RUN dotnet publish -c Release -o /app/publish
+
+# Expose backend port
 EXPOSE 5000
 ENV ASPNETCORE_URLS=http://0.0.0.0:5000
 
-# Hot reload is allowed ONLY in dev mode
-CMD ["dotnet", "watch", "run", "--non-interactive"]
+# Run migrations from SOURCE folder, then run app from PUBLISH folder
+ENTRYPOINT ["bash", "-c", "cd /app && dotnet ef database update && dotnet /app/publish/AutoShip.dll"]
 
