@@ -34,6 +34,23 @@ namespace AutoShip.Data
                 .HasOne(c => c.Registration)
                 .WithOne(r => r.Car)
                 .HasForeignKey<RegistrationProcess>(r => r.CarId);
+
+                // Invoice decimal precision fixes
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.CustomsFee)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.OtherCharges)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.RegistrationFee)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Invoice>()
+                .Property(i => i.ShippingCost)
+                .HasPrecision(18, 2);
         }
 
     }
