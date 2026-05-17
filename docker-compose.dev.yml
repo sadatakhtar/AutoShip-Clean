@@ -31,7 +31,8 @@ services:
     env_file:
       - .env
     environment:
-      DOTNET_ENVIRONMENT: Development
+      #DOTNET_ENVIRONMENT: Development
+      ASPNETCORE_ENVIRONMENT: "Production"
       Jwt__Key: ${JWT_KEY}
       EmailSettings__Username: ${EMAIL_USERNAME}
       EmailSettings__Password: ${EMAIL_PASSWORD}
@@ -43,7 +44,8 @@ services:
       - "5065:5000"
 
     depends_on:
-      - autoship-sql
+      autoship-sql:
+        condition: service_healthy
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5000/health"]

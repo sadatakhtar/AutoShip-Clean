@@ -57,7 +57,7 @@ builder.Services.AddDbContext<ImportDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
-        policy => policy.WithOrigins("http://localhost:5173", "http://localhost:5174","http://autoship-frontend:5173")
+        policy => policy.WithOrigins("http://localhost:5173", "http://localhost:5174", "http://autoship-frontend:5173")
                         .AllowAnyHeader()
                         .AllowAnyMethod());
 });
@@ -88,7 +88,7 @@ builder.Services.AddScoped<EmailService>();
 var app = builder.Build();
 
 
-// --- DATABASE MIGRATIONS + FORCED SEEDING ---
+// --- DATABASE MIGRATIONS + SAFE SEEDING ---
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<ImportDbContext>();
@@ -96,76 +96,72 @@ using (var scope = app.Services.CreateScope())
     try
     {
         Console.WriteLine(">>> Applying database migrations...");
-        context.Database.Migrate();
 
-        Console.WriteLine(">>> Forcing seeding of superadmin user...");
-
-        var hasher = new PasswordHasher<User>();
-
-        // Remove existing user if exists
-        var existing = context.Users.FirstOrDefault(u => u.Username == "superadmin");
-        if (existing != null)
+        // Only migrate if needed
+        if (context.Database.GetPendingMigrations().Any())
         {
-            context.Users.Remove(existing);
-            context.SaveChanges();
+            context.Database.Migrate();
         }
 
-        // Create fresh user
-        var super = new User
+        // Seed superadmin ONLY if missing
+        if (!context.Users.Any(u => u.Username == "superadmin"))
         {
-            Username = "superadmin",
-            Email = "superadmin@example.com",
-            Role = "Admin"
-        };
+            Console.WriteLine(">>> Seeding superadmin user...");
 
-        super.PasswordHash = hasher.HashPassword(super, "super123");
+            var hasher = new PasswordHasher<User>();
 
-        context.Users.Add(super);
-        context.SaveChanges();
+            var super = new User
+            {
+                Username = "superadmin",
+                Email = "superadmin@example.com",
+                Role = "Admin"
+            };
 
-        Console.WriteLine(">>> Superadmin user created: superadmin / super123");
+            super.PasswordHash = hasher.HashPassword(super, "super123");
 
-        // Seed sample cars if none exist
+            context.Users.Add(super);
+            context.SaveChanges();
+
+            Console.WriteLine(">>> Superadmin user created.");
+        }
+
+        // Seed sample cars ONLY if empty
         if (!context.Cars.Any())
         {
             Console.WriteLine(">>> Seeding sample cars...");
 
-            var car1 = new Car
-            {
-                VIN = "TESTVIN1234567890",
-                Make = "Toyota",
-                Model = "Corolla",
-                ManufactureDate = new DateTime(2020, 5, 1),
-                Status = "Imported",
-                IVAStatus = "Pending",
-                MOTStatus = "Not Required",
-                V55Status = "Not Submitted",
-                ImageBlobName = null
-            };
+            context.Cars.AddRange(
+                new Car
+                {
+                    VIN = "TESTVIN1234567890",
+                    Make = "Toyota",
+                    Model = "Corolla",
+                    ManufactureDate = new DateTime(2020, 5, 1),
+                    Status = "Imported",
+                    IVAStatus = "Pending",
+                    MOTStatus = "Not Required",
+                    V55Status = "Not Submitted"
+                },
+                new Car
+                {
+                    VIN = "TESTVIN0987654321",
+                    Make = "Honda",
+                    Model = "Civic",
+                    ManufactureDate = new DateTime(2019, 3, 15),
+                    Status = "Registered",
+                    IVAStatus = "Completed",
+                    MOTStatus = "Passed",
+                    V55Status = "Approved"
+                }
+            );
 
-            var car2 = new Car
-            {
-                VIN = "TESTVIN0987654321",
-                Make = "Honda",
-                Model = "Civic",
-                ManufactureDate = new DateTime(2019, 3, 15),
-                Status = "Registered",
-                IVAStatus = "Completed",
-                MOTStatus = "Passed",
-                V55Status = "Approved",
-                ImageBlobName = null
-            };
-
-            context.Cars.AddRange(car1, car2);
             context.SaveChanges();
-
             Console.WriteLine(">>> Sample cars seeded.");
         }
-
     }
     catch (Exception ex)
     {
-        Console.WriteLine($">>> Error seeding database: {ex.Message}");
+        Console.WriteLine($">>> Error during migration/seeding: {ex.Message}");
     }
 }
 
@@ -177,14 +173,19 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseDefaultFiles();
-    app.UseStaticFiles(new StaticFileOptions
-    {
-        FileProvider = new PhysicalFileProvider(
-            Path.Combine(Directory.GetCurrentDirectory(), "WebClient", "dist"))
-    });
+    // Only serve frontend in REAL production
+    var distPath = Path.Combine(Directory.GetCurrentDirectory(), "WebClient", "dist");
 
-    app.MapFallbackToFile("index.html");
+    if (Directory.Exists(distPath))
+    {
+        app.UseDefaultFiles();
+        app.UseStaticFiles(new StaticFileOptions
+        {
+            FileProvider = new PhysicalFileProvider(distPath)
+        });
+
+        app.MapFallbackToFile("index.html");
+    }
 }
 
 app.MapScalarApiReference(options => options.WithPersistentAuthentication());
