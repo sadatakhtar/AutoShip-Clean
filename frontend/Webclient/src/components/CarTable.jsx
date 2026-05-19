@@ -16,7 +16,9 @@ import Loading from './Loading';
 import PropTypes from 'prop-types';
 import CreateVehicleModal from './modals/CreateVehicleModal';
 import EditModal from './modals/EditModal';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import UploadDocumentsModal from './modals/UploadDocumentsModal';
+import ViewDocumentsModal from './modals/ViewDocumentsModal';
 
 const CarTable = ({
   data,
@@ -32,6 +34,14 @@ const CarTable = ({
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [uploadOpen, setUploadOpen] = useState(false);
   const [uploadVehicle, setUploadVehicle] = useState(null);
+
+  const [docsOpen, setDocsOpen] = useState(false);
+  const [docsVehicle, setDocsVehicle] = useState(null);
+
+  const handleViewDocs = (vehicle) => {
+    setDocsVehicle(vehicle);
+    setDocsOpen(true);
+  };
 
   const handleUploadDocs = (vehicle) => {
     setUploadVehicle(vehicle);
@@ -70,9 +80,11 @@ const CarTable = ({
               <TableCell style={{ fontSize: 20 }}>IVA</TableCell>
               <TableCell style={{ fontSize: 20 }}>MOT</TableCell>
               <TableCell style={{ fontSize: 20 }}>Status</TableCell>
+              {/* <TableCell style={{ fontSize: 20 }}>Docs</TableCell>  */}
               <TableCell style={{ fontSize: 20 }}>Action</TableCell>
             </TableRow>
           </TableHead>
+
           <TableBody>
             {isLoading ? (
               <TableRow>
@@ -104,6 +116,23 @@ const CarTable = ({
                   <TableCell>{vehicle?.ivaStatus}</TableCell>
                   <TableCell>{vehicle?.motStatus}</TableCell>
                   <TableCell>{vehicle?.status}</TableCell>
+                  {/* <TableCell>
+                    {vehicle.documentsCount > 0 ? (
+                      <AttachFileIcon
+                        onClick={() => handleViewDocs(vehicle)}
+                        sx={{
+                          cursor: 'pointer',
+                          color: '#1976d2',
+                          fontSize: 26,
+                          '&:hover': { color: '#004ba0' },
+                        }}
+                        titleAccess={`${vehicle.documentsCount} document(s)`}
+                      />
+                    ) : (
+                      <span style={{ color: '#999' }}>—</span>
+                    )}
+                  </TableCell> */}
+
                   <TableCell>
                     {
                       <EditAndDelBtns
@@ -160,6 +189,12 @@ const CarTable = ({
         onClose={() => setUploadOpen(false)}
         carId={uploadVehicle?.id}
         onUploaded={refreshCarList}
+      />
+
+      <ViewDocumentsModal
+        open={docsOpen}
+        onClose={() => setDocsOpen(false)}
+        carId={docsVehicle?.id}
       />
     </Box>
   );

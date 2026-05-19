@@ -28,9 +28,25 @@ namespace AutoShip.Controllers
         [HttpGet]
         public async Task<ActionResult<Car>> GetAllCars()
         {
-            var cars = await _context.Cars.ToListAsync();
-            var dtos = cars.Adapt<List<CarDto>>();
-            return Ok(dtos);
+            // var cars = await _context.Cars.ToListAsync();
+            // var dtos = cars.Adapt<List<CarDto>>();
+            // return Ok(dtos);
+             var cars = await _context.Cars
+        .Select(c => new CarDto
+        {
+            Id = c.Id,
+            VIN = c.VIN,
+            Make = c.Make,
+            Model = c.Model,
+            Status = c.Status,
+            IVAStatus = c.IVAStatus,
+            MOTStatus = c.MOTStatus,
+            V55Status = c.V55Status,
+           // DocumentsCount = _context.Documents.Count(d => d.CarId == c.Id)
+        })
+        .ToListAsync();
+
+    return Ok(cars);
 
         }
 

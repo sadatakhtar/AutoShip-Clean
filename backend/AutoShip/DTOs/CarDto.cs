@@ -12,6 +12,7 @@ namespace AutoShip.DTOs
         public string IVAStatus { get; set; }
         public string MOTStatus { get; set; }
         public string V55Status { get; set; }
+       // public int DocumentsCount { get; set; }
 
         public List<DocumentDto> Documents { get; set; }
 

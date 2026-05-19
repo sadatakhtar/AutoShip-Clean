@@ -39,7 +39,7 @@ const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle, onUpload }) => {
           style={{ backgroundColor: 'blue' }}
           onClick={() => onUpload(vehicle)}
         >
-          Upload Docs
+          View/upload Docs
         </MyButton>
       </div>
       <DeleteModal
