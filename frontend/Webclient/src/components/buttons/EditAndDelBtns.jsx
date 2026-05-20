@@ -16,7 +16,7 @@ const MyButton = styled.button`
   }
 `;
 
-const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle, onUpload }) => {
+const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle, onUpload, onCost }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -40,6 +40,14 @@ const EditAndDelBtns = ({ id, onDelete, onEdit, vehicle, onUpload }) => {
           onClick={() => onUpload(vehicle)}
         >
           View/upload Docs
+        </MyButton>
+      </div>
+      <div style={{ padding: '5px' }}>
+        <MyButton
+          style={{ backgroundColor: 'orange', color: 'black' }}
+          onClick={() => onCost(vehicle)}
+        >
+          Cost
         </MyButton>
       </div>
       <DeleteModal

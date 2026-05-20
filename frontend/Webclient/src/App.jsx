@@ -14,6 +14,7 @@ import ForgotPassword from './pages/ForgotPasswordPage';
 import ResetPassword from './pages/ResetPasswordPage';
 import SettingsPage from './pages/SettingsPage';
 import ManageUsersPage from './pages/ManageUsersPage';
+import CostPage from './pages/CostPage';
 
 function App() {
   return (
@@ -66,7 +67,7 @@ function App() {
             </AdminRoute>
           }
         />
-            <Route
+        <Route
           path="/manage-users"
           element={
             <AdminRoute>
@@ -79,6 +80,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/vehicles/:id/costs"
+          element={
+            <ProtectedRoute>
+              <CostPage />
             </ProtectedRoute>
           }
         />

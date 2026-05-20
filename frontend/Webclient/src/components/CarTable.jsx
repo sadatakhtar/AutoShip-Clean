@@ -19,6 +19,7 @@ import EditModal from './modals/EditModal';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import UploadDocumentsModal from './modals/UploadDocumentsModal';
 import ViewDocumentsModal from './modals/ViewDocumentsModal';
+import { useNavigate } from 'react-router-dom';
 
 const CarTable = ({
   data,
@@ -37,6 +38,12 @@ const CarTable = ({
 
   const [docsOpen, setDocsOpen] = useState(false);
   const [docsVehicle, setDocsVehicle] = useState(null);
+
+  const navigate = useNavigate();
+
+  const handleCost = (vehicle) => {
+    navigate(`/vehicles/${vehicle.id}/costs`);
+  };
 
   const handleViewDocs = (vehicle) => {
     setDocsVehicle(vehicle);
@@ -141,6 +148,7 @@ const CarTable = ({
                         vehicle={vehicle}
                         onEdit={handleEdit}
                         onUpload={handleUploadDocs}
+                        onCost={handleCost}
                       />
                     }
                   </TableCell>

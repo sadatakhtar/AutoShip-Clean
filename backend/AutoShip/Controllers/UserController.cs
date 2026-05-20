@@ -15,7 +15,7 @@ namespace AutoShip.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
