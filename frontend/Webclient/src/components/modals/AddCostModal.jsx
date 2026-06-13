@@ -8,7 +8,7 @@ import {
   MenuItem,
   Paper,
 } from '@mui/material';
-import api from '../../api/axios';
+import api from '../lib/axios';
 
 const modalStyle = {
   position: 'absolute',
@@ -46,12 +46,17 @@ const AddCostModal = ({ open, onClose, vehicleId, onAdded }) => {
   }, [open]);
 
   const handleSubmit = async () => {
+    if (!amount || isNaN(amount)) {
+      alert('Amount is required');
+      return;
+    }
+
     try {
       await api.post('/Cost', {
-        vehicleId,
+        carId: Number(vehicleId),
         name,
         category,
-        amount: parseFloat(amount),
+        amount: amount ? Number(amount) : 0,
         date,
         paidByUserId: paidBy,
         notes,

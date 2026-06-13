@@ -14,6 +14,8 @@ namespace AutoShip.Data
         public DbSet<RegistrationProcess> Registrations { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Cost> Costs { get; set; }
+
 
         // public object Invoices { get; internal set; }
 
@@ -51,6 +53,11 @@ namespace AutoShip.Data
             modelBuilder.Entity<Invoice>()
                 .Property(i => i.ShippingCost)
                 .HasPrecision(18, 2);
+            
+            modelBuilder.Entity<Cost>()
+                .Property(c => c.Amount)
+                .HasPrecision(18, 2);
+
         }
 
     }

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_BASE } from "../env";
 
 const LoginPage = ({ onLogin }) => {
   const [username, setUsername] = useState('');
@@ -34,6 +35,9 @@ const LoginPage = ({ onLogin }) => {
       setError('Invalid username or password');
     }
   };
+  // NB: Only use while debugging - this will cause test failure if left uncommented
+  //console.log('API BASE:', import.meta.env.VITE_API_BASE);
+  console.log("API BASE:", API_BASE);
 
   return (
     <Box

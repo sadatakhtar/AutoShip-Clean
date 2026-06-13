@@ -9,14 +9,15 @@ import {
 import '@testing-library/jest-dom';
 import ManageUsersPage from '../../pages/ManageUsersPage';
 import { BrowserRouter } from 'react-router-dom';
+import api from '../../components/lib/axios';
 
 // Mock API
-jest.mock('../../api/axios', () => ({
+jest.mock('../../components/lib/axios', () => ({
   get: jest.fn(),
   delete: jest.fn(),
 }));
 
-import api from '../../api/axios';
+
 
 // Mock DashboardTitleAndModal
 jest.mock('../../components/DashboardTitleAndModal', () => (props) => (

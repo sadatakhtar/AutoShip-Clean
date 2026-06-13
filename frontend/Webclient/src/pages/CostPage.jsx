@@ -14,7 +14,7 @@ import {
   TableBody,
   CircularProgress,
 } from '@mui/material';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 import AddCostModal from '../components/modals/AddCostModal';
 
 const CostPage = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import DashboardPage from '../../pages/DashboardPage';
-import api from '../../api/axios';
+import api from '../../components/lib/axios';
 import { BrowserRouter } from 'react-router-dom';
 
 // Mock navigate
@@ -12,7 +12,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 // Mock API
-jest.mock('../../api/axios', () => ({
+jest.mock('../../components/lib/axios', () => ({
   get: jest.fn(),
   delete: jest.fn(),
   post: jest.fn(),

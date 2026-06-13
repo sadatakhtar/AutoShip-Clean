@@ -7,10 +7,10 @@ import {
 } from "@testing-library/react";
 import RegisterPage from "../../pages/RegisterPage";
 import { MemoryRouter } from "react-router-dom";
-import api from "../../api/axios";
+import api from "../../components/lib/axios";
 
 // ✅ Mock axios
-jest.mock("../../api/axios", () => ({
+jest.mock('../../components/lib/axios', () => ({
   post: jest.fn(),
 }));
 

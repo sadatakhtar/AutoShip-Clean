@@ -9,7 +9,7 @@ import {
   Alert,
 } from '@mui/material';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 
 export default function ResetPassword() {
   const [params] = useSearchParams();
