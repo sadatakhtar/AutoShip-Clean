@@ -34,6 +34,8 @@ const LoginPage = ({ onLogin }) => {
       setError('Invalid username or password');
     }
   };
+  // NB: Only use while debugging - this will cause test failure if left uncommented
+  // console.log("API BASE:", import.meta.env.VITE_API_BASE);
 
   return (
     <Box

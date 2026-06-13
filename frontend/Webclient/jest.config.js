@@ -16,7 +16,12 @@ export default {
   testEnvironment: "jsdom",
 
   // Files that run before all tests (polyfills, globals)
-  setupFiles: ["<rootDir>/jest.polyfills.js"],
+  setupFiles: [
+  "<rootDir>/jest.polyfills.js",
+  "<rootDir>/src/__mocks__/vite-env.js"
+],
+
+
 
   // Files that run after the test framework is set up (mocks, custom matchers)
   setupFilesAfterEnv: ["<rootDir>/setupTests.js"],

@@ -1,12 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:5065/api", 
-    headers: {
-    "Content-Type": "application/json"
-  }
-
-
+  baseURL:
+    typeof globalThis.import !== "undefined"
+      ? globalThis.import.meta.env.VITE_API_BASE
+      : "",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 // Attach token automatically
