@@ -8,7 +8,7 @@ import {
   MenuItem,
   Paper,
 } from '@mui/material';
-import api from '../../api/axios';
+import api from '../lib/axios';
 
 const modalStyle = {
   position: 'absolute',

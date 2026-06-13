@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Profile from "../../pages/Profile";
 import { BrowserRouter } from "react-router-dom";
-import api from "../../api/axios";
+import api from "../../components/lib/axios";
 
 // Mock navigate
 const mockNavigate = jest.fn();
@@ -27,7 +27,7 @@ jest.mock("../../components/modals/ChangePasswordModal", () => (props) => (
 ));
 
 // Mock API
-jest.mock("../../api/axios", () => ({
+jest.mock("../../components/lib/axios", () => ({
   post: jest.fn(),
 }));
 

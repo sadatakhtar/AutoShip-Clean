@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
 
 export default function RegisterPage() {

@@ -11,10 +11,16 @@ import {
   Alert,
   Box,
 } from '@mui/material';
-import api from '../../api/axios';
+import api from '../lib/axios';
 import PropTypes from 'prop-types';
 
-const carStatuses = ['Available', 'InTransit', 'Sold', 'Reserved', 'Registered'];
+const carStatuses = [
+  'Available',
+  'InTransit',
+  'Sold',
+  'Reserved',
+  'Registered',
+];
 const ivaStatuses = ['Pending', 'Passed', 'Failed'];
 const motStatuses = ['Pending', 'Valid', 'Expired'];
 const v55Statuses = ['Pending', 'Submitted', 'Approved'];
@@ -90,21 +96,47 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
 
       <DialogContent dividers sx={{ backgroundColor: '#fafafa', pt: 3, pb: 3 }}>
         <Box sx={{ mb: 2 }}>
-          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-          {success && <Alert severity="success" sx={{ mb: 2 }}>{success}</Alert>}
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+          {success && (
+            <Alert severity="success" sx={{ mb: 2 }}>
+              {success}
+            </Alert>
+          )}
         </Box>
 
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <TextField label="VIN" name="vin" fullWidth value={form.vin} onChange={handleChange} />
+            <TextField
+              label="VIN"
+              name="vin"
+              fullWidth
+              value={form.vin}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12} sx={{ maxWidth: { sm: '50%', md: '33.33%' } }}>
-            <TextField label="Make" name="make" fullWidth value={form.make} onChange={handleChange} />
+            <TextField
+              label="Make"
+              name="make"
+              fullWidth
+              value={form.make}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12} sx={{ maxWidth: { sm: '50%', md: '33.33%' } }}>
-            <TextField label="Model" name="model" fullWidth value={form.model} onChange={handleChange} />
+            <TextField
+              label="Model"
+              name="model"
+              fullWidth
+              value={form.model}
+              onChange={handleChange}
+            />
           </Grid>
 
           <Grid item xs={12}>
@@ -130,31 +162,75 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
               onChange={handleChange}
             >
               {carStatuses.map((s) => (
-                <MenuItem key={s} value={s}>{s}</MenuItem>
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
               ))}
             </TextField>
           </Grid>
 
           <Grid item xs={12} sx={{ maxWidth: { sm: '50%', md: '33.33%' } }}>
-            <TextField select label="IVA Status" name="ivaStatus" fullWidth value={form.ivaStatus} onChange={handleChange}>
-              {ivaStatuses.map((s) => (<MenuItem key={s} value={s}>{s}</MenuItem>))}
+            <TextField
+              select
+              label="IVA Status"
+              name="ivaStatus"
+              fullWidth
+              value={form.ivaStatus}
+              onChange={handleChange}
+            >
+              {ivaStatuses.map((s) => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
 
           <Grid item xs={12} sx={{ maxWidth: { sm: '50%', md: '33.33%' } }}>
-            <TextField select label="MOT Status" name="motStatus" fullWidth value={form.motStatus} onChange={handleChange}>
-              {motStatuses.map((s) => (<MenuItem key={s} value={s}>{s}</MenuItem>))}
+            <TextField
+              select
+              label="MOT Status"
+              name="motStatus"
+              fullWidth
+              value={form.motStatus}
+              onChange={handleChange}
+            >
+              {motStatuses.map((s) => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
 
           <Grid item xs={12} sx={{ maxWidth: { sm: '50%', md: '33.33%' } }}>
-            <TextField select label="V55 Status" name="v55Status" fullWidth value={form.v55Status} onChange={handleChange}>
-              {v55Statuses.map((s) => (<MenuItem key={s} value={s}>{s}</MenuItem>))}
+            <TextField
+              select
+              label="V55 Status"
+              name="v55Status"
+              fullWidth
+              value={form.v55Status}
+              onChange={handleChange}
+            >
+              {v55Statuses.map((s) => (
+                <MenuItem key={s} value={s}>
+                  {s}
+                </MenuItem>
+              ))}
             </TextField>
           </Grid>
 
           <Grid item xs={12}>
-            <TextField select label="Document Type" name="documentType" fullWidth value={form.documentType || ''} onChange={(e) => setForm({ ...form, documentType: e.target.value })}>
+            <TextField
+              select
+              label="Document Type"
+              name="documentType"
+              fullWidth
+              value={form.documentType || ''}
+              onChange={(e) =>
+                setForm({ ...form, documentType: e.target.value })
+              }
+            >
               <MenuItem value="Nova">Nova</MenuItem>
               <MenuItem value="V5">V5</MenuItem>
               <MenuItem value="MOT">MOT</MenuItem>
@@ -180,8 +256,12 @@ export default function CreateVehicleModal({ open, setOpen, onSuccess }) {
       </DialogContent>
 
       <DialogActions sx={{ p: 2 }}>
-        <Button variant="contained" onClick={handleSubmit}>Create Vehicle</Button>
-        <Button variant="outlined" onClick={handleClose}>Cancel</Button>
+        <Button variant="contained" onClick={handleSubmit}>
+          Create Vehicle
+        </Button>
+        <Button variant="outlined" onClick={handleClose}>
+          Cancel
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CarTable from '../../src/components/CarTable';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 import { Box, IconButton, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import AddIcon from '@mui/icons-material/Add';

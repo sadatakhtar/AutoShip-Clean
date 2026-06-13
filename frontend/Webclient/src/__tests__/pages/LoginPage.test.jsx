@@ -2,10 +2,10 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import LoginPage from '../../pages/LoginPage';
 import { MemoryRouter } from 'react-router-dom';
-import api from '../../api/axios';
+import api from '../../components/lib/axios';
 import { AuthProvider } from '../../context/AuthContext';
 
-jest.mock('../../api/axios', () => ({
+jest.mock('../../components/lib/axios', () => ({
   post: jest.fn(),
 }));
 

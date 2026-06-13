@@ -5,7 +5,7 @@ import App from "../App";
 import Home from "../pages/Home";
 import About from "../pages/About";
 import DashboardPage from "../pages/DashboardPage";
-import api from "../api/axios";
+import api from "../components/lib/axios";
 
 
 let mockUser = { username: "test", role: "User" };
@@ -14,7 +14,7 @@ jest.mock("../context/AuthContext", () => ({
   useAuth: () => ({ user: mockUser }),
 }));
 // Mock the configured axios instance
-jest.mock("../api/axios", () => ({
+jest.mock("../components/lib/axios", () => ({
   get: jest.fn(),
   post: jest.fn(),
   interceptors: {

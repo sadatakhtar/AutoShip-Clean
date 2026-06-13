@@ -15,7 +15,7 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  IconButton
+  IconButton,
 } from '@mui/material';
 
 import DownloadIcon from '@mui/icons-material/Download';
@@ -23,7 +23,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
-import api from '../../api/axios';
+import api from '../lib/axios';
 
 const documentTypes = [
   'Nova',
@@ -57,6 +57,24 @@ export default function UploadDocumentsModal({
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [docToDelete, setDocToDelete] = useState(null);
 
+  // useEffect(() => {
+  //   if (!open) return;
+
+  //   const fetchDocs = async () => {
+  //     try {
+  //       const res = await api.get(`/document/car/${carId}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem('token')}`,
+  //         },
+  //       });
+  //       setExistingDocs(res.data || []);
+  //     } catch (err) {
+  //       console.error('Error fetching documents', err);
+  //     }
+  //   };
+
+  //   fetchDocs();
+  // }, [open, carId]);
   useEffect(() => {
     if (!open) return;
 
@@ -73,7 +91,10 @@ export default function UploadDocumentsModal({
       }
     };
 
-    fetchDocs();
+    // Delay fetch until after Dialog has mounted its children
+    const timer = setTimeout(fetchDocs, 0);
+
+    return () => clearTimeout(timer);
   }, [open, carId]);
 
   const handleUpload = async () => {
@@ -290,7 +311,11 @@ export default function UploadDocumentsModal({
           <Button variant="outlined" onClick={handleClose}>
             Cancel
           </Button>
-          <Button variant="contained" onClick={handleUpload} disabled={uploading}>
+          <Button
+            variant="contained"
+            onClick={handleUpload}
+            disabled={uploading}
+          >
             Upload
           </Button>
         </DialogActions>
@@ -305,7 +330,11 @@ export default function UploadDocumentsModal({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
-          <Button color="error" variant="contained" onClick={handleDeleteConfirmed}>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={handleDeleteConfirmed}
+          >
             Delete
           </Button>
         </DialogActions>

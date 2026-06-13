@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-} from '@mui/material';
-import api from '../api/axios';
+import { Box, Card, CardContent, Typography, Button } from '@mui/material';
+import api from '../components/lib/axios';
 import { useNavigate } from 'react-router-dom';
 import ChangePasswordModal from '../components/modals/ChangePasswordModal';
 

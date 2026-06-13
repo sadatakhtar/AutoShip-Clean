@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import SuccessSnackbar from '../components/SuccessSnackbar';
-import api from '../api/axios';
+import api from '../components/lib/axios';
 import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
 import { useNavigate } from 'react-router-dom';
 
@@ -70,7 +70,7 @@ const ManageUsersPage = () => {
             <TableCell style={{ fontSize: 20 }}>
               <strong>Role</strong>
             </TableCell>
-            <TableCell style={{ fontSize: 20 }}> 
+            <TableCell style={{ fontSize: 20 }}>
               <strong>Action</strong>
             </TableCell>
           </TableRow>
