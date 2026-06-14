@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import api from '../lib/axios';
 
+
 const modalStyle = {
   position: 'absolute',
   top: '50%',
@@ -30,6 +31,7 @@ const AddCostModal = ({ open, onClose, vehicleId, onAdded }) => {
   const [paidBy, setPaidBy] = useState('');
   const [notes, setNotes] = useState('');
   const [users, setUsers] = useState([]);
+
 
   // Load users for "Paid By" dropdown
   const loadUsers = async () => {
@@ -70,87 +72,89 @@ const AddCostModal = ({ open, onClose, vehicleId, onAdded }) => {
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <Paper sx={modalStyle}>
-        <Typography variant="h5" fontWeight="bold" mb={2}>
-          Add Cost
-        </Typography>
-
-        <TextField
-          fullWidth
-          label="Cost Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          fullWidth
-          select
-          label="Category"
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          sx={{ mb: 2 }}
-        >
-          <MenuItem value="Base">Base</MenuItem>
-          <MenuItem value="Processing">Processing</MenuItem>
-          <MenuItem value="Other">Other</MenuItem>
-        </TextField>
-
-        <TextField
-          fullWidth
-          type="number"
-          label="Amount (£)"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          fullWidth
-          type="date"
-          label="Date"
-          InputLabelProps={{ shrink: true }}
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          sx={{ mb: 2 }}
-        />
-
-        <TextField
-          fullWidth
-          select
-          label="Paid By"
-          value={paidBy}
-          onChange={(e) => setPaidBy(e.target.value)}
-          sx={{ mb: 2 }}
-        >
-          {users.map((u) => (
-            <MenuItem key={u.id} value={u.id}>
-              {u.username}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        <TextField
-          fullWidth
-          label="Notes"
-          multiline
-          rows={3}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
-          sx={{ mb: 3 }}
-        />
-
-        <Box display="flex" justifyContent="flex-end" gap={1}>
-          <Button variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button variant="contained" color="success" onClick={handleSubmit}>
+    <Box>
+      <Modal open={open} onClose={onClose}>
+        <Paper sx={modalStyle}>
+          <Typography variant="h5" fontWeight="bold" mb={2}>
             Add Cost
-          </Button>
-        </Box>
-      </Paper>
-    </Modal>
+          </Typography>
+
+          <TextField
+            fullWidth
+            label="Cost Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            select
+            label="Category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            sx={{ mb: 2 }}
+          >
+            <MenuItem value="Base">Base</MenuItem>
+            <MenuItem value="Processing">Processing</MenuItem>
+            <MenuItem value="Other">Other</MenuItem>
+          </TextField>
+
+          <TextField
+            fullWidth
+            type="number"
+            label="Amount (£)"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            type="date"
+            label="Date"
+            InputLabelProps={{ shrink: true }}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            sx={{ mb: 2 }}
+          />
+
+          <TextField
+            fullWidth
+            select
+            label="Paid By"
+            value={paidBy}
+            onChange={(e) => setPaidBy(e.target.value)}
+            sx={{ mb: 2 }}
+          >
+            {users.map((u) => (
+              <MenuItem key={u.id} value={u.id}>
+                {u.username}
+              </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            fullWidth
+            label="Notes"
+            multiline
+            rows={3}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            sx={{ mb: 3 }}
+          />
+
+          <Box display="flex" justifyContent="flex-end" gap={1}>
+            <Button variant="outlined" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button variant="contained" color="success" onClick={handleSubmit}>
+              Add Cost
+            </Button>
+          </Box>
+        </Paper>
+      </Modal>
+    </Box>
   );
 };
 

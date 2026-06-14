@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Box,
   Typography,
@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import api from '../components/lib/axios';
 import AddCostModal from '../components/modals/AddCostModal';
+import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
 
 const CostPage = () => {
   const { id } = useParams();
@@ -25,8 +26,9 @@ const CostPage = () => {
   const [partners, setPartners] = useState([]);
   const [selectedPartner, setSelectedPartner] = useState('All');
   const [loading, setLoading] = useState(true);
-
   const [addOpen, setAddOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const loadData = async () => {
     try {
@@ -79,188 +81,200 @@ const CostPage = () => {
   }
 
   return (
-    // --- only showing the updated styling parts ---
+    <Box sx={{ mt: 10 }}>
+      <Box sx={{ mb: 2 }}>
+        <DashboardTitleAndModal
+          title="Dashboard"
+          handleBack={() => navigate(-1)}
+        />
+      </Box>
 
-    <Box
-      p={3}
-      pt={5}
-      sx={{
-        color: 'white',
-        background: 'lightgray',
-        minHeight: '60vh',
-        marginTop: '150px',
-      }}
-    >
-      {/* VEHICLE HEADER */}
-      <Typography variant="h4" fontWeight="bold" gutterBottom color="black">
-        Vehicle Costs — #{id}
-      </Typography>
-
-      {vehicle && (
-        <Typography variant="h6" color="#cccccc" gutterBottom>
-          {vehicle.make} {vehicle.model} — {vehicle.status}
-        </Typography>
-      )}
-
-      <Divider sx={{ my: 2, borderColor: 'lightgray' }} />
-
-      {/* TOTAL COST — LIGHT CARD */}
-      <Paper
+      <Box
+        p={3}
+        pt={5}
         sx={{
-          p: 2,
-          mb: 3,
-          background: '#f9f9f9',
-          border: '1px solid #ddd',
-          color: 'black',
+          color: 'white',
+          background: 'lightgray',
+          minHeight: '60vh',
         }}
       >
-        <Typography variant="h5" fontWeight="bold">
-          Total Cost: £{totalCost.toLocaleString()}
+        {/* VEHICLE HEADER */}
+        <Typography variant="h4" fontWeight="bold" gutterBottom color="black">
+          Vehicle Costs — #{id}
         </Typography>
-      </Paper>
 
-      {/* PARTNER TOTALS */}
-      <Typography variant="h6" gutterBottom color="black">
-        Partner Contributions
-      </Typography>
+        {vehicle && (
+          <Typography variant="h6" color="#151414" gutterBottom>
+            {vehicle.make} {vehicle.model} — {vehicle.status}
+          </Typography>
+        )}
 
-      <Box display="flex" gap={1} mb={2}>
-        <Chip
-          label="All"
+        <Divider sx={{ my: 2, borderColor: 'lightgray' }} />
+
+        {/* TOTAL COST */}
+        <Paper
           sx={{
-            background: selectedPartner === 'All' ? '#1976d2' : '#444',
-            color: 'white',
+            p: 2,
+            mb: 3,
+            background: '#f9f9f9',
+            border: '1px solid #ddd',
+            color: 'black',
           }}
-          onClick={() => setSelectedPartner('All')}
-        />
+        >
+          <Typography variant="h5" fontWeight="bold">
+            Total Cost: £{totalCost.toLocaleString()}
+          </Typography>
+        </Paper>
 
-        {partnerTotals.map((p) => (
+        {/* PARTNER TOTALS */}
+        <Typography variant="h6" gutterBottom color="black">
+          Partner Contributions
+        </Typography>
+
+        <Box display="flex" gap={1} mb={2}>
           <Chip
-            key={p.name}
-            label={`${p.name}: £${p.total}`}
+            label="All"
             sx={{
-              background: selectedPartner === p.name ? '#1976d2' : '#444',
+              background: selectedPartner === 'All' ? '#1976d2' : '#444',
               color: 'white',
             }}
-            onClick={() => setSelectedPartner(p.name)}
+            onClick={() => setSelectedPartner('All')}
           />
-        ))}
-      </Box>
 
-      <Divider sx={{ my: 2, borderColor: 'lightgray' }} />
+          {partnerTotals.map((p) => (
+            <Chip
+              key={p.name}
+              label={`${p.name}: £${p.total}`}
+              sx={{
+                background: selectedPartner === p.name ? '#1976d2' : '#444',
+                color: 'white',
+              }}
+              onClick={() => setSelectedPartner(p.name)}
+            />
+          ))}
+        </Box>
 
-      {/* ADD COST BUTTON */}
-      <Box display="flex" justifyContent="flex-end" mb={2}>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => setAddOpen(true)}
+        <Divider sx={{ my: 2, borderColor: 'lightgray' }} />
+
+        {/* ADD COST BUTTON */}
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => setAddOpen(true)}
+          >
+            + Add Cost
+          </Button>
+        </Box>
+
+        {/* COST TABLE */}
+        <Paper
+          sx={{
+            background: '#fafafa',
+            border: '1px solid #ddd',
+          }}
         >
-          + Add Cost
-        </Button>
-      </Box>
-
-      {/* COST TABLE — LIGHT BACKGROUND */}
-      <Paper
-        sx={{
-          background: '#fafafa',
-          border: '1px solid #ddd',
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow sx={{ background: '#e0e0e0' }}>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Name
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Category
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Paid By
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Date
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Amount
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Reimbursed
-              </TableCell>
-              <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-
-          <TableBody>
-            {filteredCosts.length === 0 ? (
-              <TableRow>
-                <TableCell
-                  colSpan={7}
-                  align="center"
-                  sx={{ py: 3, color: '#555' }}
-                >
-                  No costs found for this vehicle
+          <Table>
+            <TableHead>
+              <TableRow sx={{ background: '#e0e0e0' }}>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Name
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Category
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Paid By
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Date
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Amount
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Reimbursed
+                </TableCell>
+                <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                  Action
                 </TableCell>
               </TableRow>
-            ) : (
-              filteredCosts.map((c) => (
-                <TableRow
-                  key={c.id}
-                  sx={{
-                    '&:hover': { background: '#f0f0f0' },
-                  }}
-                >
-                  <TableCell>{c.name}</TableCell>
-                  <TableCell>{c.category}</TableCell>
-                  <TableCell>{c.paidByUserName}</TableCell>
-                  <TableCell>{new Date(c.date).toLocaleDateString()}</TableCell>
-                  <TableCell>£{c.amount}</TableCell>
-                  <TableCell>{c.isReimbursed ? 'Yes' : 'No'}</TableCell>
-                  <TableCell>
-                    {c.isReimbursed ? (
-                      <Button size="small" variant="outlined">
-                        View
-                      </Button>
-                    ) : (
-                      <Button size="small" variant="contained" color="warning">
-                        Reimburse
-                      </Button>
-                    )}
+            </TableHead>
+
+            <TableBody>
+              {filteredCosts.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={7}
+                    align="center"
+                    sx={{ py: 3, color: '#555' }}
+                  >
+                    No costs found for this vehicle
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </Paper>
+              ) : (
+                filteredCosts.map((c) => (
+                  <TableRow
+                    key={c.id}
+                    sx={{
+                      '&:hover': { background: '#f0f0f0' },
+                    }}
+                  >
+                    <TableCell>{c.name}</TableCell>
+                    <TableCell>{c.category}</TableCell>
+                    <TableCell>{c.paidByUserName}</TableCell>
+                    <TableCell>
+                      {new Date(c.date).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>£{c.amount}</TableCell>
+                    <TableCell>{c.isReimbursed ? 'Yes' : 'No'}</TableCell>
+                    <TableCell>
+                      {c.isReimbursed ? (
+                        <Button size="small" variant="outlined">
+                          View
+                        </Button>
+                      ) : (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          color="warning"
+                        >
+                          Reimburse
+                        </Button>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </Paper>
 
-      <Divider sx={{ my: 3, borderColor: 'lightgray' }} />
+        <Divider sx={{ my: 3, borderColor: 'lightgray' }} />
 
-      {/* REIMBURSEMENT HISTORY — LIGHT CARD */}
-      <Typography variant="h6" gutterBottom color="black">
-        Reimbursement History
-      </Typography>
+        {/* REIMBURSEMENT HISTORY */}
+        <Typography variant="h6" gutterBottom color="black">
+          Reimbursement History
+        </Typography>
 
-      <Paper
-        sx={{
-          p: 2,
-          background: '#f9f9f9',
-          border: '1px solid #ddd',
-          color: '#333',
-        }}
-      >
-        <i>Reimbursement history will appear here…</i>
-      </Paper>
+        <Paper
+          sx={{
+            p: 2,
+            background: '#f9f9f9',
+            border: '1px solid #ddd',
+            color: '#333',
+          }}
+        >
+          <i>Reimbursement history will appear here…</i>
+        </Paper>
 
-      <AddCostModal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        vehicleId={id}
-        onAdded={loadData}
-      />
+        <AddCostModal
+          open={addOpen}
+          onClose={() => setAddOpen(false)}
+          vehicleId={id}
+          onAdded={loadData}
+        />
+      </Box>
     </Box>
   );
 };

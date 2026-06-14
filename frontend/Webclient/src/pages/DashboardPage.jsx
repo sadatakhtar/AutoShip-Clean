@@ -83,7 +83,7 @@ const DashboardPage = () => {
   return (
     <div data-testid="dashboard-component" style={{ marginTop: 100 }}>
       <DashboardTitleAndModal
-        title="Dashboard"
+        title="Main"
         addLabel="Add Vehicle"
         handleOpen={handleOpen}
         handleBack={handleBack}
