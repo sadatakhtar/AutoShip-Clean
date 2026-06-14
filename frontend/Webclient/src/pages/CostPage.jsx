@@ -17,16 +17,22 @@ import {
 import api from '../components/lib/axios';
 import AddCostModal from '../components/modals/AddCostModal';
 import DashboardTitleAndModal from '../components/DashboardTitleAndModal';
+import ReimburseModal from '../components/modals/ReimbursementModal';
+import ReimbursementHistoryModal from '../components/modals/ReimbursementHistoryModal';
 
 const CostPage = () => {
   const { id } = useParams();
-
   const [vehicle, setVehicle] = useState(null);
   const [costs, setCosts] = useState([]);
   const [partners, setPartners] = useState([]);
   const [selectedPartner, setSelectedPartner] = useState('All');
   const [loading, setLoading] = useState(true);
   const [addOpen, setAddOpen] = useState(false);
+
+  const [reimburseOpen, setReimburseOpen] = useState(false);
+  const [selectedCost, setSelectedCost] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -79,6 +85,75 @@ const CostPage = () => {
       </Box>
     );
   }
+
+  const handleUndoReimburseOne = async (costId) => {
+    try {
+      await api.post(`/Cost/unreimburse/${costId}`);
+      loadData();
+    } catch (error) {
+      console.error('Failed to undo reimbursement:', error);
+    }
+  };
+
+  const handleUndoReimburseAll = async () => {
+    try {
+      await api.post(
+        `/Cost/unreimburse/user/${selectedUser}/vehicle/${vehicleId}`
+      );
+      loadData();
+    } catch (error) {
+      console.error('Failed to undo all reimbursements:', error);
+    }
+  };
+
+  const handleReimburseOne = async (cost) => {
+    try {
+      await api.post(`/Cost/reimburse/${cost.id}`);
+
+      setHistory((prev) => [
+        {
+          id: crypto.randomUUID(),
+          type: 'single',
+          user: cost.paidByUserName,
+          amount: cost.amount,
+          costName: cost.name,
+          date: new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+
+      setReimburseOpen(false);
+      loadData();
+    } catch (err) {
+      console.error('Failed to reimburse cost:', err);
+    }
+  };
+
+  const handleReimburseAll = async (username) => {
+    try {
+      await api.post(`/Cost/reimburse/user/${username}/vehicle/${id}`);
+
+      const total = costs
+        .filter((c) => c.paidByUserName === username)
+        .reduce((sum, c) => sum + c.amount, 0);
+
+      setHistory((prev) => [
+        {
+          id: crypto.randomUUID(),
+          type: 'bulk',
+          user: username,
+          amount: total,
+          date: new Date().toISOString(),
+        },
+        ...prev,
+      ]);
+
+      setReimburseOpen(false);
+      loadData();
+    } catch (err) {
+      console.error('Failed to reimburse all costs:', err);
+    }
+  };
 
   return (
     <Box sx={{ mt: 10 }}>
@@ -230,14 +305,23 @@ const CostPage = () => {
                     <TableCell>{c.isReimbursed ? 'Yes' : 'No'}</TableCell>
                     <TableCell>
                       {c.isReimbursed ? (
-                        <Button size="small" variant="outlined">
-                          View
+                        <Button
+                          size="small"
+                          variant="outlined"
+                          color="error"
+                          onClick={() => handleUndoReimburseOne(c.id)}
+                        >
+                          Undo
                         </Button>
                       ) : (
                         <Button
                           size="small"
                           variant="contained"
                           color="warning"
+                          onClick={() => {
+                            setSelectedCost(c);
+                            setReimburseOpen(true);
+                          }}
                         >
                           Reimburse
                         </Button>
@@ -257,6 +341,12 @@ const CostPage = () => {
           Reimbursement History
         </Typography>
 
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Button variant="outlined" onClick={() => setHistoryOpen(true)}>
+            View Full History
+          </Button>
+        </Box>
+
         <Paper
           sx={{
             p: 2,
@@ -265,7 +355,36 @@ const CostPage = () => {
             color: '#333',
           }}
         >
-          <i>Reimbursement history will appear here…</i>
+          {history.length === 0 ? (
+            <i>No reimbursements yet…</i>
+          ) : (
+            history.map((h) => (
+              <Paper
+                key={h.id}
+                sx={{
+                  p: 2,
+                  mb: 1,
+                  background: '#fff',
+                  border: '1px solid #ddd',
+                }}
+              >
+                <Typography>
+                  <strong>{h.user}</strong> was reimbursed{' '}
+                  <strong>£{h.amount}</strong>
+                  {h.type === 'single' && (
+                    <>
+                      {' '}
+                      for <strong>{h.costName}</strong>
+                    </>
+                  )}
+                </Typography>
+
+                <Typography variant="body2" color="gray">
+                  {new Date(h.date).toLocaleString()}
+                </Typography>
+              </Paper>
+            ))
+          )}
         </Paper>
 
         <AddCostModal
@@ -273,6 +392,20 @@ const CostPage = () => {
           onClose={() => setAddOpen(false)}
           vehicleId={id}
           onAdded={loadData}
+        />
+
+        <ReimburseModal
+          open={reimburseOpen}
+          onClose={() => setReimburseOpen(false)}
+          cost={selectedCost}
+          onReimburseOne={handleReimburseOne}
+          onReimburseAll={handleReimburseAll}
+        />
+
+        <ReimbursementHistoryModal
+          open={historyOpen}
+          onClose={() => setHistoryOpen(false)}
+          history={history}
         />
       </Box>
     </Box>
