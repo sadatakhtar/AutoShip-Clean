@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import AddCostModal from '../../../components/modals/AddCostModal';
 import api from '../../../components/lib/axios';
 
@@ -9,7 +10,7 @@ jest.mock('../../../components/lib/axios', () => ({
   post: jest.fn(),
 }));
 
-// ⭐ FIXED: Proper Modal mock that forwards `open` so useEffect runs
+// Modal mock
 jest.mock('@mui/material/Modal', () => {
   return ({ open, children, ...rest }) =>
     open ? (
@@ -32,13 +33,15 @@ describe('AddCostModal', () => {
 
   const renderModal = (props = {}) =>
     render(
-      <AddCostModal
-        open={true}
-        onClose={jest.fn()}
-        vehicleId={123}
-        onAdded={jest.fn()}
-        {...props}
-      />
+      <MemoryRouter>
+        <AddCostModal
+          open={true}
+          onClose={jest.fn()}
+          vehicleId={123}
+          onAdded={jest.fn()}
+          {...props}
+        />
+      </MemoryRouter>
     );
 
   test('renders modal fields', () => {
@@ -54,7 +57,6 @@ describe('AddCostModal', () => {
     expect(screen.getByRole('combobox', { name: /category/i })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: /paid by/i })).toBeInTheDocument();
   });
-
 
   test('shows alert if amount is missing', () => {
     window.alert = jest.fn();
