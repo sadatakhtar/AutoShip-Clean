@@ -7,11 +7,9 @@ import {
   Button,
   MenuItem,
   Paper,
-  IconButton,
 } from '@mui/material';
 import api from '../lib/axios';
-import DashboardTitleAndModal from '../DashboardTitleAndModal';
-import { useNavigate } from 'react-router-dom';
+
 
 const modalStyle = {
   position: 'absolute',
@@ -34,7 +32,6 @@ const AddCostModal = ({ open, onClose, vehicleId, onAdded }) => {
   const [notes, setNotes] = useState('');
   const [users, setUsers] = useState([]);
 
-  const navigate = useNavigate();
 
   // Load users for "Paid By" dropdown
   const loadUsers = async () => {
@@ -76,13 +73,6 @@ const AddCostModal = ({ open, onClose, vehicleId, onAdded }) => {
 
   return (
     <Box>
-      {/* <Box sx={{ mb: 2 }}>
-        <DashboardTitleAndModal
-          title="Dashboard"
-          handleBack={() => navigate(-1)}
-        />
-      </Box> */}
-
       <Modal open={open} onClose={onClose}>
         <Paper sx={modalStyle}>
           <Typography variant="h5" fontWeight="bold" mb={2}>
