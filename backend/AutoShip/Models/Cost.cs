@@ -19,5 +19,7 @@ namespace AutoShip.Models
         public string Notes { get; set; }
 
         public bool IsReimbursed { get; set; } = false;
+        public DateTime? ReimbursedAt { get; set; }
+
     }
 }
