@@ -36,6 +36,15 @@ const CostPage = () => {
 
   const navigate = useNavigate();
 
+  const loadHistory = async () => {
+    try {
+      const res = await api.get(`/Cost/history/vehicle/${id}`);
+      setHistory(res.data);
+    } catch (err) {
+      console.error('Failed to load history:', err);
+    }
+  };
+
   const loadData = async () => {
     try {
       setLoading(true);
@@ -50,6 +59,7 @@ const CostPage = () => {
         ...new Set(costRes.data.map((c) => c.paidByUserName)),
       ];
       setPartners(uniquePartners);
+      await loadHistory();
     } catch (err) {
       console.error('Failed to load cost data:', err);
     } finally {
@@ -110,18 +120,6 @@ const CostPage = () => {
     try {
       await api.post(`/Cost/reimburse/${cost.id}`);
 
-      setHistory((prev) => [
-        {
-          id: crypto.randomUUID(),
-          type: 'single',
-          user: cost.paidByUserName,
-          amount: cost.amount,
-          costName: cost.name,
-          date: new Date().toISOString(),
-        },
-        ...prev,
-      ]);
-
       setReimburseOpen(false);
       loadData();
     } catch (err) {
@@ -136,17 +134,6 @@ const CostPage = () => {
       const total = costs
         .filter((c) => c.paidByUserName === username)
         .reduce((sum, c) => sum + c.amount, 0);
-
-      setHistory((prev) => [
-        {
-          id: crypto.randomUUID(),
-          type: 'bulk',
-          user: username,
-          amount: total,
-          date: new Date().toISOString(),
-        },
-        ...prev,
-      ]);
 
       setReimburseOpen(false);
       loadData();
@@ -355,8 +342,8 @@ const CostPage = () => {
             color: '#333',
           }}
         >
-          {history.length === 0 ? (
-            <i>No reimbursements yet…</i>
+          {!Array.isArray(history) || history.length === 0 ? (
+            <Typography>No reimbursements yet…</Typography>
           ) : (
             history.map((h) => (
               <Paper
@@ -369,18 +356,22 @@ const CostPage = () => {
                 }}
               >
                 <Typography>
-                  <strong>{h.user}</strong> was reimbursed{' '}
+                  <strong>{h.user}</strong>
+                  {h.action === 'reimburse'
+                    ? ' reimbursed '
+                    : ' undid reimbursement of '}
                   <strong>£{h.amount}</strong>
-                  {h.type === 'single' && (
+
+                  {h.cost && h.cost.name && (
                     <>
                       {' '}
-                      for <strong>{h.costName}</strong>
+                      for <strong>{h.cost.name}</strong>
                     </>
                   )}
                 </Typography>
 
                 <Typography variant="body2" color="gray">
-                  {new Date(h.date).toLocaleString()}
+                  {new Date(h.timestamp).toLocaleString()}
                 </Typography>
               </Paper>
             ))

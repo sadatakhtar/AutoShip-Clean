@@ -15,6 +15,7 @@ namespace AutoShip.Data
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Cost> Costs { get; set; }
+        public DbSet<ReimbursementHistory> ReimbursementHistory { get; set; }
 
 
         // public object Invoices { get; internal set; }
