@@ -4,6 +4,7 @@ using AutoShip.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AutoShip.Migrations
 {
     [DbContext(typeof(ImportDbContext))]
-    partial class ImportDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260621091255_AddReimbursementHistory")]
+    partial class AddReimbursementHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,8 +330,6 @@ namespace AutoShip.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CostId");
-
                     b.ToTable("ReimbursementHistory");
                 });
 
@@ -393,17 +394,6 @@ namespace AutoShip.Migrations
                         .IsRequired();
 
                     b.Navigation("Car");
-                });
-
-            modelBuilder.Entity("ReimbursementHistory", b =>
-                {
-                    b.HasOne("AutoShip.Models.Cost", "Cost")
-                        .WithMany()
-                        .HasForeignKey("CostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cost");
                 });
 
             modelBuilder.Entity("AutoShip.Models.Car", b =>

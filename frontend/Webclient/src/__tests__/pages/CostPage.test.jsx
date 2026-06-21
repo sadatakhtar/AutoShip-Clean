@@ -15,7 +15,7 @@ jest.mock('../../components/modals/AddCostModal', () => (props) => (
   <div data-testid="add-cost-modal">{props.open ? 'OPEN' : 'CLOSED'}</div>
 ));
 
-// ⭐ NEW — Mock ReimbursementHistoryModal
+// NEW — Mock ReimbursementHistoryModal
 jest.mock('../../components/modals/ReimbursementHistoryModal', () => (props) => (
   <div data-testid="history-modal">{props.open ? 'HISTORY OPEN' : 'HISTORY CLOSED'}</div>
 ));

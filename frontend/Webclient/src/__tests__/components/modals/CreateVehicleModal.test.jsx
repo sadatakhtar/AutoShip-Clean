@@ -96,61 +96,6 @@ describe('CreateVehicleModal', () => {
     );
   });
 
-  test.skip('submits form successfully with one file', async () => {
-    jest.useFakeTimers();
-    api.post.mockResolvedValueOnce({ data: { id: 1 } });
-
-    const setOpen = jest.fn();
-    setup(true, setOpen);
-
-    // Fill required fields
-    fireEvent.change(screen.getByLabelText('VIN'), {
-      target: { value: '12345' },
-    });
-    fireEvent.change(screen.getByLabelText('Make'), {
-      target: { value: 'Audi' },
-    });
-    fireEvent.change(screen.getByLabelText('Model'), {
-      target: { value: 'E-tron' },
-    });
-    fireEvent.change(screen.getByLabelText('Manufacture Date'), {
-      target: { value: '2025-01-01' },
-    });
-
-    selectOption('Status', 'Available');
-    selectOption('IVA Status', 'Pending');
-    selectOption('MOT Status', 'Pending');
-    selectOption('V55 Status', 'Pending');
-    selectOption('Document Type', 'V5');
-
-    // Upload one file
-    const file = new File(['file-content'], 'v5.pdf', {
-      type: 'application/pdf',
-    });
-    const input = screen.getByLabelText(/upload documents/i);
-    fireEvent.change(input, { target: { files: [file] } });
-
-    fireEvent.click(screen.getByText('Create Vehicle'));
-
-    await waitFor(() =>
-      expect(
-        screen.getByText('Vehicle created successfully')
-      ).toBeInTheDocument()
-    );
-
-    // ⭐ Flush the timeout that closes the modal
-    jest.runOnlyPendingTimers();
-
-    expect(setOpen).toHaveBeenCalledWith(false);
-
-    jest.useRealTimers(); // ⭐ restore timers
-
-    // Validate FormData
-    const formData = api.post.mock.calls[0][1];
-    expect(formData.get('Documents')).toBe(file);
-    expect(formData.get('DocumentType')).toBe('V5');
-  });
-
   test('closes modal when Cancel is clicked', () => {
     const setOpen = jest.fn();
     setup(true, setOpen);

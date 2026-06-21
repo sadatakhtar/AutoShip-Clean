@@ -19,6 +19,30 @@ namespace AutoShip.Controllers
             _context = context;
         }
 
+        [HttpPost("history")]
+        public async Task<IActionResult> AddHistory([FromBody] ReimbursementHistory entry)
+        {
+            entry.Timestamp = DateTime.UtcNow;
+
+            _context.ReimbursementHistory.Add(entry);
+            await _context.SaveChangesAsync();
+
+            return Ok(entry);
+        }
+
+        [HttpGet("history/vehicle/{vehicleId}")]
+        public async Task<IActionResult> GetHistory(int vehicleId)
+        {
+            var history = await _context.ReimbursementHistory
+            .Include(h => h.Cost)
+            .Where(h => h.Cost.CarId == vehicleId)
+            .OrderByDescending(h => h.Timestamp)
+            .ToListAsync();
+
+            return Ok(history);
+        }
+
+
         // ---------------------------------------------------------
         // POST: api/Cost
         // Add a single cost entry
@@ -92,6 +116,15 @@ namespace AutoShip.Controllers
             cost.IsReimbursed = true;
             cost.ReimbursedAt = DateTime.UtcNow;
 
+            _context.ReimbursementHistory.Add(new ReimbursementHistory
+            {
+                CostId = cost.Id,
+                User = cost.PaidByUser.Username,
+                Amount = cost.Amount,
+                Action = "reimburse",
+                Timestamp = DateTime.UtcNow
+            });
+
             await _context.SaveChangesAsync();
 
             return Ok(cost);
@@ -116,6 +149,15 @@ namespace AutoShip.Controllers
             {
                 cost.IsReimbursed = true;
                 cost.ReimbursedAt = DateTime.UtcNow;
+
+                _context.ReimbursementHistory.Add(new ReimbursementHistory
+                {
+                    CostId = cost.Id,
+                    User = cost.PaidByUser.Username,
+                    Amount = cost.Amount,
+                    Action = "reimburse",
+                    Timestamp = DateTime.UtcNow
+                });
             }
 
             await _context.SaveChangesAsync();
@@ -140,7 +182,17 @@ namespace AutoShip.Controllers
             cost.IsReimbursed = false;
             cost.ReimbursedAt = null;
 
+            _context.ReimbursementHistory.Add(new ReimbursementHistory
+            {
+                CostId = cost.Id,
+                User = cost.PaidByUser.Username,
+                Amount = cost.Amount,
+                Action = "undo",
+                Timestamp = DateTime.UtcNow
+            });
+
             await _context.SaveChangesAsync();
+
 
             return Ok(cost);
         }
@@ -160,11 +212,21 @@ namespace AutoShip.Controllers
             if (!costs.Any())
                 return NotFound();
 
-            foreach (var cost in costs)
+        foreach (var cost in costs)
+        {
+            cost.IsReimbursed = false;
+            cost.ReimbursedAt = null;
+
+    
+            _context.ReimbursementHistory.Add(new ReimbursementHistory
             {
-                cost.IsReimbursed = false;
-                cost.ReimbursedAt = null;
-            }
+                CostId = cost.Id,
+                User = cost.PaidByUser.Username,
+                Amount = cost.Amount,
+                Action = "undo",
+                Timestamp = DateTime.UtcNow
+            });
+        }
 
             await _context.SaveChangesAsync();
 
